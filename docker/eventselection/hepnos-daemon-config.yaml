@@ -1,0 +1,34 @@
+address: ofi+tcp
+threads: 10
+databases:
+  datasets:
+    name: hepnos-datasets.$RANK.$TARGET
+    path: /dev/shm
+    type: map
+    targets: 2
+    providers: 1
+  runs:
+    name: hepnos-runs.$RANK.$TARGET
+    path: /dev/shm
+    type: map
+    targets: 2
+    providers: 1
+  subruns:
+    name: hepnos-subruns.$RANK.$TARGET
+    path: /dev/shm
+    type: map
+    targets: 2
+    providers: 1
+  events:
+    name: hepnos-events.$RANK.$TARGET
+    path: /dev/shm
+    type: map
+    targets: 2
+    providers: 1
+  products:
+    name: hepnos-products.$RANK.$TARGET
+    path: /dev/shm
+    type: map
+    targets: 2
+    providers: 1
+

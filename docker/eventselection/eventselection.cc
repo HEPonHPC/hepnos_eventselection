@@ -30,9 +30,9 @@
 #include <hepnos/RunSet.hpp>
 #include <hepnos/SubRun.hpp>
 
-#include "../dataloader/ConfigBlockAdder.hpp"
-#include "../dataloader/GenericBlock.hpp"
-#include "../dataloader/split_configs.hpp"
+#include "ConfigBlockAdder.hpp"
+#include "GenericBlock.hpp"
+#include "split_configs.hpp"
 #include "AnalysisData.hpp"
 #include "EventSelectionConfig.hpp"
 #include "Reduce.hpp"

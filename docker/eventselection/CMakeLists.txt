@@ -41,7 +41,6 @@ set (libraries ${libraries}
 add_executable(eventselection eventselection.cc disable_depman.cc)
 target_link_libraries(eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
 
-
 add_executable(new_eventselection new_eventselection.cc disable_depman.cc)
 target_link_libraries(new_eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
 

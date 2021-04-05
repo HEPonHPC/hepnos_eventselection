@@ -11,7 +11,7 @@ VERSION=1.62
 all: build
 
 build:
-	docker build --tag $(NAME):$(VERSION) $(PWD)
+	docker build --tag $(NAME):$(VERSION) --network host $(PWD) 
 
 tag_latest: build
 	docker tag $(NAME):$(VERSION) $(NAME):latest

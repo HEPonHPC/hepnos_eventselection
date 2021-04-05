@@ -156,10 +156,17 @@ int work(int argc, char *argv[], Mpi &world) {
   result_buffer good_slices_per_thread{static_cast<std::size_t>(num_threads)};
   for (auto &x : good_slices_per_thread)
     x.reserve(1000);
+  if (debugfile) {
+    *debugfile << "Before declaring mutex" << std::endl;
+  }
   thallium::mutex debugfile_mutex;
   auto dowork = [world, &good_slices_per_thread, &timingdata,
                  &debugfile, &debugfile_mutex](const hepnos::Event &ev,
                              const hepnos::ProductCache &cache) {
+    if (debugfile) {
+      std::lock_guard<thallium::mutex> lock(debugfile_mutex);
+      *debugfile << " Before thread_ids" << std::endl;
+    }
     // adjusting thread_id to start from 0
     auto thread_id = thallium::xstream::self().get_rank() - 1;
     if (debugfile) {
@@ -186,6 +193,9 @@ int work(int argc, char *argv[], Mpi &world) {
     }
   };
 
+  if (debugfile) {
+    *debugfile << "Before parallel process" << std::endl;
+  }
   timingdata.push_back({MPI_Wtime(), 0, Steps::pre_process});
   parallel_processor.process(dataset, dowork, &stats);
   timingdata.push_back({MPI_Wtime(), 0, Steps::post_process});

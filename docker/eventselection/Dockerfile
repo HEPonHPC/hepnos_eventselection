@@ -15,13 +15,13 @@ RUN spack load -r hepnos && \
     export CEREAL_INC=`spack location -i cereal`/include && \
     export THALLIUM_INC=`spack location -i mochi-thallium`/include
 
-#COPY git clone https://ssehrish@bitbucket.org/hep_on_hpc/hepnos_example.git && \
-#    cd hepnos_example && \ 
-#    git checkout master && \
-#    git checkout hepnosdemo_1_60 && \ 
-#    cd  eventselection && \
-#    mkdir build && \
-#    cd build && \
-#    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_C_COMPILER=$(which gcc) -DDIY_INCLUDE_DIRS=/usr/local/diy/include .. && \ 
-#    make -j8
-#
+COPY *.hpp *.cc *.C hepnos-daemon-config.yaml CMakeLists.txt /code/ 
+
+WORKDIR /code
+
+RUN spack load -r hepnos && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_PREFIX_PATH="/hepnos/opt/spack/linux-scientificfermi6-k10/gcc-6.4.0/hepnos-main-pm7ljvdi2tp2s252qdhy52fq2zfhud5n/share/cmake/hepnos/;/hepnos/opt/spack/linux-scientificfermi6-k10/gcc-6.4.0/mercury-2.0.0-w75p6aetlejtvrv34ix2nlz6mkrp72sk/share/cmake/mercury/" -DCMAKE_BUILD_TYPE=Release -DMPI_HOME=/mpich -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_C_COMPILER=$(which gcc) -DDIY_INCLUDE_DIRS=/usr/local/diy/include .. && \ 
+    make -j8
+
