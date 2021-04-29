@@ -1,0 +1,3 @@
+#!/bin/sh
+#LOGFILE="strace-$(hostname).$$"
+exec gdb ./new_eventselection -- -f ../client.yaml -s NOvA -o /tmp -t 2 -d /tmp

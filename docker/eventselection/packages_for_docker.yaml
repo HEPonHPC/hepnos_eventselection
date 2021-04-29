@@ -1,0 +1,55 @@
+packages:
+    all:
+        providers:
+            mpi: [ mpich, openmpi ]
+    perl:
+        paths:
+            perl: /usr
+        buildable: False
+    git:
+        paths:
+            git@2.14.1: /cvmfs/nova.opensciencegrid.org/externals/git/v2_14_1/Linux64bit+2.6-2.12
+    zlib:
+        paths:
+            zlib@1.2.3: /usr
+    autoconf:
+        paths:
+            autoconf@2.63.0: /usr
+    automake:
+        paths:
+            automake@1.11.1: /usr
+    coreutils:
+        paths:
+            coreutils@8.4: /usr
+    gettext:
+        paths:
+            gettext@0.17: /usr
+    python:
+        paths:
+            python@2.7.14: /cvmfs/nova.opensciencegrid.org/externals/python/v2_7_14b/Linux64bit+2.6-2.12
+        buildable: False
+    tar:
+        paths:
+            tar@1.23: /usr
+        buildable: False
+    mpich:
+        paths:
+            mpich@3.2.1: /mpich
+        buildable: False
+    cmake:
+        paths:
+            cmake@3.14.3: /cvmfs/nova.opensciencegrid.org/externals/cmake/v3_14_3/Linux64bit+2.6-2.12
+        buildable: False
+    pkg-config:
+        paths:
+            pkg-config@0.23.1: /usr
+        buildable: False
+    boost:
+        paths:
+            boost@1.66: /cvmfs/nova.opensciencegrid.org/externals/boost/v1_66_0a/Linux64bit+2.6-2.12-e15-prof
+        buildable: False
+    libfabric:
+        variants: fabrics=tcp,rxm
+    mercury:
+        variants: +udreg ~boostsys
+
