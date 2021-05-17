@@ -46,7 +46,7 @@ SHELL ["/bin/bash", "-lc"]
 RUN spack repo add sds-repo
 
 # Install HEPnOS
-RUN spack install --dirty hepnos-dataloader@main%gcc@6.4.0 ^hepnos@main%gcc@6.4.0 cxxstd=14 ^libfabric fabrics=tcp,rxm  
+RUN spack install --dirty hepnos-dataloader@main%gcc@6.4.0 ^hepnos@main%gcc@6.4.0 cxxstd=14 target=x86_64 ^libfabric fabrics=tcp,rxm  target=x86_64
 
 WORKDIR /usr/local/diy
 RUN git checkout -- CMakeLists.txt && \
