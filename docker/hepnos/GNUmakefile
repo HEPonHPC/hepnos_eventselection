@@ -10,12 +10,12 @@ VERSION = 4.3
 all: build
 
 build:
-	docker build --tag $(NAME):$(VERSION) $(PWD)
+	docker build --tag $(NAME):$(VERSION) --network host $(PWD)
 
 tag_latest: build
 	docker tag $(NAME):$(VERSION) $(NAME):latest
 
-shell: build
+shell:
 	docker run --rm -it $(NAME):$(VERSION)
 
 release: tag_latest
