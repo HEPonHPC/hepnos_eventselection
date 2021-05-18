@@ -3,7 +3,7 @@
 NAME = heponhpc/hepnos
 
 # Remember to increment VERSION as you make new versions!
-VERSION = 4.3
+VERSION = 4.4
 
 .PHONY: all build tag_latest release test shell
 
