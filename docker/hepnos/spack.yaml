@@ -2,6 +2,7 @@ spack:
   specs:
   - hepnos cxxstd=14 target=x86_64
   - hepnos-dataloader target=x86_64
+  - mpich
   concretization: together
   repos:
   - /hepnos/mochi-spack-packages
