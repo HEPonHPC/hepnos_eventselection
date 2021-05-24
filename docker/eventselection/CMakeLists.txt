@@ -20,9 +20,9 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include
                      $ENV{THALLIUM_INC}
                      $ENV{CEREAL_INC}
                      $ENV{DATAFORMAT_INC}
-	                 $ENV{SRT_PRIVATE_CONTEXT}/include
-	                 $ENV{SRT_PUBLIC_CONTEXT}/include
-	                 $ENV{ROOT_INC})
+                     $ENV{SRT_PRIVATE_CONTEXT}/include
+                     $ENV{SRT_PUBLIC_CONTEXT}/include
+                     $ENV{ROOT_INC})
 
 link_directories ($ENV{SRT_PRIVATE_CONTEXT}/lib/Linux2.6-GCC-maxopt
                   $ENV{SRT_PUBLIC_CONTEXT}/lib/Linux2.6-GCC-maxopt
@@ -30,12 +30,12 @@ link_directories ($ENV{SRT_PRIVATE_CONTEXT}/lib/Linux2.6-GCC-maxopt
                   $ENV{})
 
 # Libraries
-set (libraries ${libraries} 
+set (libraries ${libraries}
                ${MPI_C_LIBRARIES}
                ${CMAKE_THREAD_LIBS_INIT}
                ${HDF5_C_LIBRARIES}
                uuid Gui Core Imt RIO Net Hist Graf Graf3d Gpad Tree TreePlayer Rint Postscript Matrix Physics MathCore Thread MultiProc
-	           Minuit2 StandardRecord StandardRecordProxy StandardRecordNOvARwgt CAFAnaCore CAFAnaVars CAFAnaCuts
+               Minuit2 StandardRecord StandardRecordProxy StandardRecordNOvARwgt CAFAnaCore CAFAnaVars CAFAnaCuts
     )
 
 add_executable(eventselection eventselection.cc disable_depman.cc)
