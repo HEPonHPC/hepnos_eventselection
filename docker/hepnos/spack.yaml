@@ -10,6 +10,7 @@ spack:
     all:
       providers:
         mpi: [ mpich ]
+        uuid: [ libuuid ]
     autoconf:
       externals:
       - spec: autoconf@2.63.0
@@ -86,6 +87,11 @@ spack:
     texinfo:
       externals:
       - spec: texinfo@4.13
+        prefix: /usr
+    libuuid:
+      buildable: false
+      externals:
+      - spec: libuuid@1.0.3
         prefix: /usr
     xz:
       externals:
