@@ -38,22 +38,22 @@ template <size_t N> std::array<char, N> string_to_array(std::string str) {
 }
 
 void preload(hepnos::ParallelEventProcessor &p, const std::string &label) {
-  p.preload<hep::rec_spill>(label);
-  p.preload<hep::rec_hdr>(label);
-  p.preload<hep::rec_slc>(label);
-  p.preload<hep::rec_vtx>(label);
-  p.preload<hep::rec_sel_remid>(label);
-  p.preload<hep::rec_sel_cvnProd3Train>(label);
-  p.preload<hep::rec_sel_cvn2017>(label);
-  p.preload<hep::rec_sel_contain>(label);
-  p.preload<hep::rec_energy_numu>(label);
-  p.preload<hep::rec_vtx_elastic_fuzzyk>(label);
-  p.preload<hep::rec_trk_cosmic>(label);
-  p.preload<hep::rec_trk_kalman>(label);
-  p.preload<hep::rec_vtx_elastic_fuzzyk_png>(label);
-  p.preload<hep::rec_vtx_elastic_fuzzyk_png_shwlid>(label);
-  p.preload<hep::rec_vtx_elastic_fuzzyk_png_cvnpart>(label);
-  p.preload<hep::rec_trk_kalman_tracks>(label);
+  p.preload<std::vector<hep::rec_spill>>(label);
+  p.preload<std::vector<hep::rec_hdr>>(label);
+  p.preload<std::vector<hep::rec_slc>>(label);
+  p.preload<std::vector<hep::rec_vtx>>(label);
+  p.preload<std::vector<hep::rec_sel_remid>>(label);
+  p.preload<std::vector<hep::rec_sel_cvnProd3Train>>(label);
+  p.preload<std::vector<hep::rec_sel_cvn2017>>(label);
+  p.preload<std::vector<hep::rec_sel_contain>>(label);
+  p.preload<std::vector<hep::rec_energy_numu>>(label);
+  p.preload<std::vector<hep::rec_vtx_elastic_fuzzyk>>(label);
+  p.preload<std::vector<hep::rec_trk_cosmic>>(label);
+  p.preload<std::vector<hep::rec_trk_kalman>>(label);
+  p.preload<std::vector<hep::rec_vtx_elastic_fuzzyk_png>>(label);
+  p.preload<std::vector<hep::rec_vtx_elastic_fuzzyk_png_shwlid>>(label);
+  p.preload<std::vector<hep::rec_vtx_elastic_fuzzyk_png_cvnpart>>(label);
+  p.preload<std::vector<hep::rec_trk_kalman_tracks>>(label);
 }
 
 int work(int argc, char *argv[], Mpi &world) {
