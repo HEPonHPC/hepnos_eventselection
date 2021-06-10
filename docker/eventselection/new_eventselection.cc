@@ -173,8 +173,8 @@ int work(int argc, char *argv[], Mpi &world) {
       std::lock_guard<thallium::mutex> lock(debugfile_mutex);
       *debugfile << "Thread " << thread_id << " Before create_records" << std::endl;
     }
-    hepnos::ProductCache const *ccache = nullptr;
-    auto records = ana::create_records(ev, timingdata, ccache);
+    //hepnos::ProductCache const *ccache = nullptr;
+    auto records = ana::create_records(ev, timingdata, &cache);
     if (debugfile) {
         std::lock_guard<thallium::mutex> lock(debugfile_mutex);
         *debugfile << "Thread " << thread_id << " processing event " << ev.number() << std::endl;
