@@ -1,12 +1,15 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.12)
 project (eventselection)
 enable_testing()
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(MPI REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS C)
 find_package(hepnos REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system serialization)
 
 find_path(DIY_INCLUDE_DIRS diy/types.h)
 
@@ -38,11 +41,14 @@ set (libraries ${libraries}
                Minuit2 StandardRecord StandardRecordProxy StandardRecordNOvARwgt CAFAnaCore CAFAnaVars CAFAnaCuts
     )
 
-add_executable(eventselection eventselection.cc disable_depman.cc)
-target_link_libraries(eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
+#add_executable(eventselection eventselection.cc disable_depman.cc)
+#target_link_libraries(eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
 
-add_executable(new_eventselection new_eventselection.cc disable_depman.cc)
-target_link_libraries(new_eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
+#add_executable(new_eventselection new_eventselection.cc disable_depman.cc)
+#target_link_libraries(new_eventselection ${libraries} hepnos ${Boost_SERIALIZATION_LIBRARY})
+
+add_executable(bm_eventselection bm_eventselection.cc disable_depman.cc)
+target_link_libraries(bm_eventselection ${libraries} hepnos Boost::serialization Boost::system)
 
 add_library(testmain SHARED main.cc)
 target_include_directories(testmain PRIVATE ${CMAKE_SOURCE_DIR})

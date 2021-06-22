@@ -4,7 +4,7 @@
 NAME = heponhpc/hepnosdemo
 
 # Remember to increment VERSION as you make new versions!
-VERSION=1.64
+VERSION=1.65
 
 .PHONY: all build tag_latest release test shell
 
@@ -16,7 +16,7 @@ build:
 tag_latest: build
 	docker tag $(NAME):$(VERSION) $(NAME):latest
 
-shell: build
+shell: 
 	docker run --rm -it $(NAME):$(VERSION)
 
 release: tag_latest

@@ -3,7 +3,7 @@ MAINTAINER ssehrish@fnal.gov
 
 WORKDIR /code
 
-LABEL version="1.64"
+LABEL version="1.65"
 
 RUN spack env activate hepnos-env && \
     export PATH=$PATH:/mpich/bin && \
@@ -28,4 +28,8 @@ RUN spack env activate hepnos-env && \
           -DCMAKE_C_COMPILER=$(which gcc) \
           -DDIY_INCLUDE_DIRS=/usr/local/diy/include .. && \
     make -j8
+
+RUN spack env activate hepnos-env && \
+    cd build && \
+    make 
 

@@ -301,7 +301,7 @@ fill_sel_remid(std::vector<caf::StandardRecord>& records,
   }
 }
 
-template <typename T, typename C>
+template <typename T>
 std::vector<T>
 event_load(hepnos::Event const& event,
            C* p, //Cache object or prefetch 
