@@ -29,10 +29,6 @@ static bool                      g_preload_products;
 static std::pair<double,double>  g_wait_range;
 static std::unordered_map<
         std::string,
-        std::function<void(const hepnos::Event&, const hepnos::ProductCache&)>>
-                                 g_load_product_fn;
-static std::unordered_map<
-        std::string,
         std::function<void(hepnos::ParallelEventProcessor&)>>
                                  g_preload_fn;
 static std::mt19937              g_mte;
@@ -43,7 +39,6 @@ static bool                      g_disable_stats;
 static void parse_arguments(int argc, char** argv);
 static std::pair<double,double> parse_wait_range(const std::string&);
 static std::string check_file_exists(const std::string& filename);
-static void prepare_product_loading_functions();
 static void prepare_preloading_functions();
 static void run_benchmark();
 template<typename Ostream>
@@ -76,20 +71,19 @@ int main(int argc, char** argv) {
     spdlog::trace("product names: {}", g_product_names.size());
     spdlog::trace("wait range: {},{}", g_wait_range.first, g_wait_range.second);
 
-    prepare_product_loading_functions();
     if(g_preload_products) {
         prepare_preloading_functions();
-    }
-
-    if(g_rank == 0) {
-        for(auto& p : g_product_names) {
-            if(g_load_product_fn.count(p) == 0) {
-                spdlog::critical("Unknown product name {}", p);
-                MPI_Abort(MPI_COMM_WORLD, -1);
-                exit(-1);
+        if(g_rank == 0) {
+            for(auto& p : g_product_names) {
+                if(g_preload_fn.count(p) == 0) {
+                    spdlog::critical("Unknown product name {}", p);
+                    MPI_Abort(MPI_COMM_WORLD, -1);
+                    exit(-1);
+                }
             }
         }
     }
+
     MPI_Barrier(MPI_COMM_WORLD);
 
     spdlog::trace("Initializing RNG");
@@ -215,57 +209,30 @@ static std::string check_file_exists(const std::string& filename) {
     return "";
 }
 
-static void prepare_product_loading_functions() {
-    spdlog::trace("Preparing functions for loading producs");
-#define X(__class__) \
-    g_load_product_fn[#__class__] = [](const hepnos::Event& ev, const hepnos::ProductCache& cache) { \
-        std::vector<__class__> product; \
-        spdlog::trace("Loading product of type " #__class__); \
-        if(!g_preload_products) { \
-            if(!ev.load(g_product_label, product)) { \
-                spdlog::error("Could not load product of type " #__class__); \
-            } \
-        } else { \
-            if(!ev.load(cache, g_product_label, product)) { \
-                spdlog::error("Could not load product of type " #__class__ " from cache"); \
-            } \
-        } \
-    };
-
-    X(dummy_product)
-    HEPNOS_FOREACH_NOVA_CLASS
-#undef X
-    spdlog::trace("Created functions for {} product types", g_load_product_fn.size());
-}
-
 static void prepare_preloading_functions() {
     spdlog::trace("Preparing functions for loading producs");
 #define X(__class__) \
+    spdlog::trace("Setting preloading function for product of type " #__class__); \
     g_preload_fn[#__class__] = [](hepnos::ParallelEventProcessor& pep) { \
-        spdlog::trace("Setting preload for product of type " #__class__); \
+        spdlog::trace("Will preload products of type " #__class__); \
         pep.preload<std::vector<__class__>>(g_product_label); \
     };
 
     X(dummy_product)
     HEPNOS_FOREACH_NOVA_CLASS
 #undef X
-    spdlog::trace("Created functions for {} product types", g_load_product_fn.size());
+    spdlog::trace("Created preloading functions for {} product types", g_preload_fn.size());
 }
 
 static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCache& cache) {
     spdlog::trace("Loading products");
-    try {
-        for(auto& p : g_product_names) {
-            g_load_product_fn[p](ev, cache);
-        }
-    } catch(const hepnos::Exception& ex) {
-        spdlog::critical(ex.what());
-    }
-//    spdlog::trace("Simulating processing");*/
-    std::vector<timing_record_for_mpi> timingdata;    
+
+    std::vector<timing_record_for_mpi> timingdata;
     std::cout << "Processing event: " << ev.number() << '\n';
     hepnos::ProductCache const *pcache = nullptr;
-    auto records = ana::create_records(ev, timingdata, pcache); 
+    if(g_preload_products)
+        pcache = &cache;
+    auto records = ana::create_records(ev, timingdata, pcache);
     std::cout << "After creating records event\n";
     for (auto const &rec : records) {
       std::cout << "Processing record: " << rec.hdr.subevt << '\n';
@@ -276,20 +243,6 @@ static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCa
         //good_slices_per_thread[thread_id].push_back(sid);
       }
     }
-   /*double t_start = MPI_Wtime();
-    double t_wait;
-    if(g_wait_range.first == g_wait_range.second) {
-        t_wait = g_wait_range.first;
-    } else {
-        std::uniform_real_distribution<double> dist(
-            g_wait_range.first, g_wait_range.second);
-        t_wait = dist(g_mte);
-    }
-    double t_now;
-    do {
-        t_now = MPI_Wtime();
-    } while(t_now - t_start < t_wait);
-*/
 }
 
 static void run_benchmark() {
