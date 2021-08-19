@@ -1,4 +1,6 @@
 #include <mpi.h>
+
+#include <thallium.hpp>
 #include <iostream>
 #include <sstream>
 #include <regex>
@@ -17,9 +19,14 @@
 
 #include "timing_record_for_mpi.hpp"
 
+#include "SliceID.hpp"
+#include "SliceIDs.hpp"
+
+
 static int                       g_size;
 static int                       g_rank;
 static std::string               g_connection_file;
+static std::string               g_output_dir;
 static std::string               g_input_dataset;
 static std::string               g_product_label;
 static spdlog::level::level_enum g_logging_level;
@@ -45,7 +52,7 @@ template<typename Ostream>
 static Ostream& operator<<(Ostream& os, const hepnos::ParallelEventProcessorStatistics& stats);
 
 int main(int argc, char** argv) {
-
+    //put in time stamp as early as possible  
     int provided, required = MPI_THREAD_MULTIPLE;
     MPI_Init_thread(&argc, &argv, required, &provided);
     MPI_Comm_size(MPI_COMM_WORLD, &g_size);
@@ -65,14 +72,17 @@ int main(int argc, char** argv) {
     }
 
     spdlog::trace("connection file: {}", g_connection_file);
+    spdlog::trace("Output dir: {}", g_output_dir);
     spdlog::trace("input dataset: {}", g_input_dataset);
     spdlog::trace("product label: {}", g_product_label);
     spdlog::trace("num threads: {}", g_num_threads);
     spdlog::trace("product names: {}", g_product_names.size());
     spdlog::trace("wait range: {},{}", g_wait_range.first, g_wait_range.second);
-
+    // time stamp: before checking preloading, data is 0 for no preload and 1 for preload
     if(g_preload_products) {
+        //time stamp before prepare preload function
         prepare_preloading_functions();
+        // time stamp after prepare prelaod
         if(g_rank == 0) {
             for(auto& p : g_product_names) {
                 if(g_preload_fn.count(p) == 0) {
@@ -83,14 +93,16 @@ int main(int argc, char** argv) {
             }
         }
     }
-
+    // time stamp: after checking preload, capture g_preload_fn.size()
     MPI_Barrier(MPI_COMM_WORLD);
+    // time stamp: after Barrier 
 
     spdlog::trace("Initializing RNG");
     g_mte = std::mt19937(g_rank);
-
+    //time stamp: before benchmark
+    std::ofstream timingfile(fmt::format("{}/timing_{}_{}_{}.dat", g_output_dir, g_rank, g_size, g_num_threads).c_str());
     run_benchmark();
-
+    //time stamp: after benchmark
     MPI_Finalize();
     return 0;
 }
@@ -101,6 +113,8 @@ static void parse_arguments(int argc, char** argv) {
         // mandatory arguments
         TCLAP::ValueArg<std::string> clientFile("c", "connection",
             "YAML connection file for HEPnOS", true, "", "string");
+        TCLAP::ValueArg<std::string> outDir("O", "out",
+            "Output directory for timing and output", true, "", "string");
         TCLAP::ValueArg<std::string> dataSetName("d", "dataset",
             "DataSet from which to load the data", true, "", "string");
         TCLAP::ValueArg<std::string> productLabel("l", "label",
@@ -131,6 +145,7 @@ static void parse_arguments(int argc, char** argv) {
             "Disable statistics collection");
 
         cmd.add(clientFile);
+        cmd.add(outDir);
         cmd.add(dataSetName);
         cmd.add(productLabel);
         cmd.add(loggingLevel);
@@ -146,6 +161,7 @@ static void parse_arguments(int argc, char** argv) {
         cmd.parse(argc, argv);
 
         g_connection_file   = check_file_exists(clientFile.getValue());
+        g_output_dir        = outDir.getValue();
         g_input_dataset     = dataSetName.getValue();
         g_product_label     = productLabel.getValue();
         g_logging_level     = spdlog::level::from_str(loggingLevel.getValue());
@@ -224,7 +240,7 @@ static void prepare_preloading_functions() {
     spdlog::trace("Created preloading functions for {} product types", g_preload_fn.size());
 }
 
-static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCache& cache) {
+static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCache& cache, std::vector<SliceIDs>& good_slices_per_thread, int thread_id) {
     spdlog::trace("Loading products");
 
     std::vector<timing_record_for_mpi> timingdata;
@@ -238,9 +254,9 @@ static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCa
       std::cout << "Processing record: " << rec.hdr.subevt << '\n';
       if (ana::good_slice(rec)) {
         std::cout << "passed slice for event: " << ev.number()<< ", " << rec.hdr.subevt << '\n';
-        //SliceID sid{ev.subrun().run().number(), ev.subrun().number(),
-        //            ev.number(), rec.hdr.subevt};
-        //good_slices_per_thread[thread_id].push_back(sid);
+        SliceID sid{ev.subrun().run().number(), ev.subrun().number(),
+                    ev.number(), rec.hdr.subevt};
+        good_slices_per_thread[thread_id].push_back(sid);
       }
     }
 }
@@ -251,7 +267,9 @@ static void run_benchmark() {
     hepnos::DataStore datastore;
     try {
         spdlog::trace("Connecting to HEPnOS using file {}", g_connection_file);
+        // time stamp before connect 
         datastore = hepnos::DataStore::connect(g_connection_file);
+        // time stamp after connect 
     } catch(const hepnos::Exception& ex) {
         spdlog::critical("Could not connect to HEPnOS service: {}", ex.what());
         MPI_Abort(MPI_COMM_WORLD, 1);
@@ -260,28 +278,40 @@ static void run_benchmark() {
     {
 
         spdlog::trace("Creating AsyncEngine with {} threads", g_num_threads);
+        // time stamp before async intiialization, capture num threads 
         hepnos::AsyncEngine async(datastore, g_num_threads);
+        // time stamp after async
 
         spdlog::trace("Creating ParallelEventProcessor");
+        // time stamp before PEP intiialization, capture g-pep_options 
         hepnos::ParallelEventProcessor pep(async, MPI_COMM_WORLD, g_pep_options);
+        // time stamp after PEP intiialization 
 
         if(g_preload_products) {
             spdlog::trace("Setting preload flags");
             for(auto& p : g_product_names) {
-                g_preload_fn[p](pep);
+              //time stamp before preload, store a 32 bit checksum of the string name  
+              g_preload_fn[p](pep);
+              // time stamp after preload
+              // make another global hash map, value is the counter
             }
         }
         spdlog::trace("Loading dataset");
         hepnos::DataSet dataset;
         try {
+
+        // time stamp before async intiialization, capture num threads 
             dataset = datastore.root()[g_input_dataset];
+        // time stamp before async intiialization, capture num threads 
         } catch(...) {}
         if(!dataset.valid() && g_rank == 0) {
             spdlog::critical("Invalid dataset {}", g_input_dataset);
             MPI_Abort(MPI_COMM_WORLD, -1);
             exit(-1);
         }
+        // time stamp before async intiialization, capture num threads 
         MPI_Barrier(MPI_COMM_WORLD);
+        // time stamp before async intiialization, capture num threads 
 
         spdlog::trace("Calling processing function on dataset {}", g_input_dataset);
 
@@ -291,17 +321,81 @@ static void run_benchmark() {
             stats_ptr = nullptr;
 
         MPI_Barrier(MPI_COMM_WORLD);
+        
+        using result_buffer = std::vector<SliceIDs>;
+        result_buffer good_slices_per_thread{static_cast<std::size_t>(g_num_threads)};
+        for (auto &x : good_slices_per_thread) x.reserve(1000);
         t_start = MPI_Wtime();
-        pep.process(dataset, [](const hepnos::Event& ev, const hepnos::ProductCache& cache) {
+        pep.process(dataset, [&good_slices_per_thread](const hepnos::Event& ev, const hepnos::ProductCache& cache) {
             auto subrun = ev.subrun();
             auto run = subrun.run();
             spdlog::trace("Processing event {} from subrun {} from run {}",
                       ev.number(), subrun.number(), run.number());
-            simulate_processing(ev, cache);
+            auto thread_id = thallium::xstream::self().get_rank() - 1;
+            simulate_processing(ev, cache, good_slices_per_thread, thread_id);
         }, stats_ptr);
         MPI_Barrier(MPI_COMM_WORLD);
         t_end = MPI_Wtime();
 
+        SliceIDs good_slices = std::accumulate( good_slices_per_thread.begin(), good_slices_per_thread.end(), SliceIDs{});
+
+        //Now gather results from all MPI ranks and write to out file
+
+         int local_slice_count = good_slices.size();
+         
+         // Rank 0 will first get all the counts of passed slices in slice_count, 
+         // then we need
+         // to gather all the slide IDs, so we need 4 MPI_Gatherv -- one for run
+         // numbers, one for subrun numbers, one for event numbers and one for slice
+         // numbers, and then we can write the output to a file!
+         //
+         gather_results();
+         if (g_rank != 0) {
+           MPI_Gather(&local_slice_count, 1, MPI_INT, NULL, 0, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+         } 
+         else 
+         {
+           std::vector<int> slice_count(g_size);
+           MPI_Gather(&local_slice_count, 1, MPI_INT, slice_count.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
+           const std::size_t total_length =
+             std::accumulate(std::begin(slice_count), std::end(slice_count), 0);
+           std::vector<int> runs(total_length);
+           std::vector<int> subRuns(total_length);
+           std::vector<int> events(total_length);
+           std::vector<int> slices(total_length);
+       
+           std::vector<int> offsets(g_size);
+           offsets[0] = 0;
+           std::partial_sum(std::begin(slice_count), std::end(slice_count) - 1,
+                          std::begin(offsets) + 1);
+           
+           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT,
+                       runs.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT,
+                       subRuns.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+          MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT,
+                       events.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT,
+                       slices.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+       
+           // write output
+           std::ofstream outfile(
+               fmt::format("{}/out.dat", g_output_dir, g_rank).c_str());
+           SliceIDs sids{runs, subRuns, events, slices};
+           outfile << sids;
+         }
         if(!g_disable_stats)
             spdlog::info("Statistics: {}", stats);
     }
