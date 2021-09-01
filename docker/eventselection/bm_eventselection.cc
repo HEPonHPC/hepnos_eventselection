@@ -47,6 +47,7 @@ static void parse_arguments(int argc, char** argv);
 static std::pair<double,double> parse_wait_range(const std::string&);
 static std::string check_file_exists(const std::string& filename);
 static void prepare_preloading_functions();
+static void  gather_results(int local_slice_count, SliceIDs const &good_slices, int g_rank, std::string g_output_dir);
 static void run_benchmark();
 template<typename Ostream>
 static Ostream& operator<<(Ostream& os, const hepnos::ParallelEventProcessorStatistics& stats);
@@ -261,6 +262,54 @@ static void simulate_processing(const hepnos::Event& ev, const hepnos::ProductCa
     }
 }
 
+    static void  gather_results(int local_slice_count, SliceIDs const &good_slices, int g_rank, std::string g_output_dir){
+         if (g_rank != 0) {
+           MPI_Gather(&local_slice_count, 1, MPI_INT, NULL, 0, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT, NULL,
+                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
+         } 
+         else 
+         {
+           std::vector<int> slice_count(g_size);
+           MPI_Gather(&local_slice_count, 1, MPI_INT, slice_count.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
+           const std::size_t total_length =
+             std::accumulate(std::begin(slice_count), std::end(slice_count), 0);
+           std::vector<int> runs(total_length);
+           std::vector<int> subRuns(total_length);
+           std::vector<int> events(total_length);
+           std::vector<int> slices(total_length);
+       
+           std::vector<int> offsets(g_size);
+           offsets[0] = 0;
+           std::partial_sum(std::begin(slice_count), std::end(slice_count) - 1,
+                          std::begin(offsets) + 1);
+           
+           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT,
+                       runs.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT,
+                       subRuns.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+          MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT,
+                       events.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT,
+                       slices.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
+                       MPI_COMM_WORLD);
+       
+           // write output
+           std::ofstream outfile(
+               fmt::format("{}/out.dat", g_output_dir, g_rank).c_str());
+           SliceIDs sids{runs, subRuns, events, slices};
+           outfile << sids;
+         }         
+}
 static void run_benchmark() {
 
     double t_start, t_end;
@@ -349,53 +398,7 @@ static void run_benchmark() {
          // numbers, one for subrun numbers, one for event numbers and one for slice
          // numbers, and then we can write the output to a file!
          //
-         gather_results();
-         if (g_rank != 0) {
-           MPI_Gather(&local_slice_count, 1, MPI_INT, NULL, 0, MPI_INT, 0, MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT, NULL,
-                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT, NULL,
-                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT, NULL,
-                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT, NULL,
-                       NULL, NULL, MPI_INT, 0, MPI_COMM_WORLD);
-         } 
-         else 
-         {
-           std::vector<int> slice_count(g_size);
-           MPI_Gather(&local_slice_count, 1, MPI_INT, slice_count.data(), 1, MPI_INT, 0, MPI_COMM_WORLD);
-           const std::size_t total_length =
-             std::accumulate(std::begin(slice_count), std::end(slice_count), 0);
-           std::vector<int> runs(total_length);
-           std::vector<int> subRuns(total_length);
-           std::vector<int> events(total_length);
-           std::vector<int> slices(total_length);
-       
-           std::vector<int> offsets(g_size);
-           offsets[0] = 0;
-           std::partial_sum(std::begin(slice_count), std::end(slice_count) - 1,
-                          std::begin(offsets) + 1);
-           
-           MPI_Gatherv(good_slices.runs.data(), local_slice_count, MPI_INT,
-                       runs.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
-                       MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.subRuns.data(), local_slice_count, MPI_INT,
-                       subRuns.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
-                       MPI_COMM_WORLD);
-          MPI_Gatherv(good_slices.events.data(), local_slice_count, MPI_INT,
-                       events.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
-                       MPI_COMM_WORLD);
-           MPI_Gatherv(good_slices.slices.data(), local_slice_count, MPI_INT,
-                       slices.data(), slice_count.data(), offsets.data(), MPI_INT, 0,
-                       MPI_COMM_WORLD);
-       
-           // write output
-           std::ofstream outfile(
-               fmt::format("{}/out.dat", g_output_dir, g_rank).c_str());
-           SliceIDs sids{runs, subRuns, events, slices};
-           outfile << sids;
-         }
+        gather_results(local_slice_count, good_slices, g_rank, g_output_dir);
         if(!g_disable_stats)
             spdlog::info("Statistics: {}", stats);
     }
