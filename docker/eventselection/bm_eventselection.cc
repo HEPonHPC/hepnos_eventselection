@@ -349,18 +349,18 @@ static void run_benchmark() {
         hepnos::DataSet dataset;
         try {
 
-        // time stamp before async intiialization, capture num threads 
+        // time stamp before create dataset 
             dataset = datastore.root()[g_input_dataset];
-        // time stamp before async intiialization, capture num threads 
+        // time stamp after create dataset 
         } catch(...) {}
         if(!dataset.valid() && g_rank == 0) {
             spdlog::critical("Invalid dataset {}", g_input_dataset);
             MPI_Abort(MPI_COMM_WORLD, -1);
             exit(-1);
         }
-        // time stamp before async intiialization, capture num threads 
+        // time stamp before barrier after dataset
         MPI_Barrier(MPI_COMM_WORLD);
-        // time stamp before async intiialization, capture num threads 
+        // time stamp after barrier after dataset
 
         spdlog::trace("Calling processing function on dataset {}", g_input_dataset);
 
