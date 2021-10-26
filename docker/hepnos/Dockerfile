@@ -15,6 +15,9 @@ RUN source /cvmfs/nova.opensciencegrid.org/externals/setup && \
     tar xf cmake-3.14.3-slf6-x86_64.tar.bz2 && \
     rm cmake-3.14.3-slf6-x86_64.tar.bz2
 
+RUN wget https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/Packages/p/patchelf-0.9-10.el6.x86_64.rpm && \
+    rpm -i patchelf-0.9-10.el6.x86_64.rpm && \
+    rm patchelf-0.9-10.el6.x86_64.rpm
 
 #RUN setup upd && \
 #    upd install forge_tools v19_0_3
