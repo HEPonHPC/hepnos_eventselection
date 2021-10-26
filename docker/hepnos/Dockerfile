@@ -27,7 +27,7 @@ RUN mkdir -p /hepnos/spack
 ENV SPACK_ROOT=/hepnos/spack \
     FORCE_UNSAFE_CONFIGURE=1
 
-LABEL version="4.5"
+LABEL version="0.5"
 # Clone spack and setup its environment
 RUN curl -s -L https://github.com/spack/spack/archive/develop.tar.gz | \
         tar xzC ${SPACK_ROOT} --strip 1 && \
