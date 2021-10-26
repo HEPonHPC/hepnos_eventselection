@@ -72,6 +72,7 @@ spack:
       - spec: mpich@3.2.1
         prefix: /mpich
     perl:
+      buildable: false    
       externals:
       - spec: perl@5.10.1
         prefix: /usr
