@@ -73,7 +73,7 @@ spack:
         prefix: /mpich
     perl:
       externals:
-      - spec: perl
+      - spec: perl@5.10.1
         prefix: /usr
     pkg-config:
       buildable: false
