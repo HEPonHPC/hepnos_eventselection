@@ -10,8 +10,10 @@ spack:
   packages:
     all:
       providers:
-        mpi: [ mpich ]
-        uuid: [ libuuid ]
+        mpi:
+        - mpich
+        uuid:
+        - libuuid
     autoconf:
       externals:
       - spec: autoconf@2.63.0

@@ -44,8 +44,11 @@ COPY spack.yaml /hepnos
 # Create the spack environment
 RUN spack env create hepnos-env /hepnos/spack.yaml
 
-# Install the environment
-RUN spack env activate hepnos-env && spack concretize && spack install
+# Concretize the environment
+RUN spack env activate hepnos-env && spack concretize
+
+# Install the environment, cleanup after
+RUN spack env activate hepnos-env && spack install --fail-fast && spack gc -y
 
 WORKDIR /usr/local/diy
 RUN git checkout -- CMakeLists.txt && \
