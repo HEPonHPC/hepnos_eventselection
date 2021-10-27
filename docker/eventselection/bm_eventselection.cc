@@ -25,6 +25,7 @@
 static int g_size;
 static int g_rank;
 static std::string g_connection_file;
+static std::string g_protocol;
 static std::string g_output_dir;
 static std::string g_input_dataset;
 static std::string g_product_label;
@@ -123,7 +124,9 @@ parse_arguments(int argc, char** argv)
     TCLAP::CmdLine cmd("Benchmark HEPnOS Parallel Event Processor", ' ', "0.1");
     // mandatory arguments
     TCLAP::ValueArg<std::string> clientFile(
-      "c", "connection", "YAML connection file for HEPnOS", true, "", "string");
+      "c", "connection", "JSON connection file for HEPnOS", true, "", "string");
+    TCLAP::ValueArg<std::string> protocol(
+      "p", "protocol", "Protocol to connect to HEPnOS", true, "", "string");
     TCLAP::ValueArg<std::string> outDir(
       "O", "out", "Output directory for timing and output", true, "", "string");
     TCLAP::ValueArg<std::string> dataSetName(
@@ -189,6 +192,7 @@ parse_arguments(int argc, char** argv)
       "", "disable-stats", "Disable statistics collection");
 
     cmd.add(clientFile);
+    cmd.add(protocol);
     cmd.add(outDir);
     cmd.add(dataSetName);
     cmd.add(productLabel);
@@ -205,6 +209,7 @@ parse_arguments(int argc, char** argv)
     cmd.parse(argc, argv);
 
     g_connection_file = check_file_exists(clientFile.getValue());
+    g_protocol = protocol.getValue();
     g_output_dir = outDir.getValue();
     g_input_dataset = dataSetName.getValue();
     g_product_label = productLabel.getValue();
@@ -448,7 +453,7 @@ run_benchmark()
   try {
     spdlog::trace("Connecting to HEPnOS using file {}", g_connection_file);
     // time stamp before connect
-    datastore = hepnos::DataStore::connect(g_connection_file);
+    datastore = hepnos::DataStore::connect(g_protocol, g_connection_file);
     // time stamp after connect
   }
   catch (const hepnos::Exception& ex) {
