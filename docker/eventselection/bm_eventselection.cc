@@ -17,10 +17,9 @@
 #include <tclap/CmdLine.h>
 #include <thallium.hpp>
 
-#include "timing_record_for_mpi.hpp"
-
 #include "SliceID.hpp"
 #include "SliceIDs.hpp"
+#include "timing_record_for_bm.hpp"
 
 static int g_size;
 static int g_rank;
@@ -64,6 +63,10 @@ main(int argc, char** argv)
   MPI_Comm_size(MPI_COMM_WORLD, &g_size);
   MPI_Comm_rank(MPI_COMM_WORLD, &g_rank);
   DisableDepManAll();
+  
+  std::vector<timing_record_for_bm> timingdata;
+  timingdata.reserve(1000 * 1000); // a wise guess
+  timingdata.push_back({MPI_Wtime(), 0, Steps::start});
   std::stringstream str_format;
   str_format << "[" << std::setw(6) << std::setfill('0') << g_rank << "|"
              << g_size << "] [%H:%M:%S.%F] [%n] [%^%l%$] %v";
@@ -311,7 +314,7 @@ simulate_processing(const hepnos::Event& ev,
 {
   spdlog::trace("Loading products");
 
-  std::vector<timing_record_for_mpi> timingdata;
+  std::vector<timing_record_for_bm> timingdata;
   std::cout << "Processing event: " << ev.number() << '\n';
   hepnos::ProductCache const* pcache = nullptr;
   if (g_preload_products)
