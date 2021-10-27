@@ -15,6 +15,9 @@ RUN source /cvmfs/nova.opensciencegrid.org/externals/setup && \
     tar xf cmake-3.14.3-slf6-x86_64.tar.bz2 && \
     rm cmake-3.14.3-slf6-x86_64.tar.bz2
 
+RUN wget https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/Packages/p/patchelf-0.9-10.el6.x86_64.rpm && \
+    rpm -i patchelf-0.9-10.el6.x86_64.rpm && \
+    rm patchelf-0.9-10.el6.x86_64.rpm
 
 #RUN setup upd && \
 #    upd install forge_tools v19_0_3
@@ -24,7 +27,7 @@ RUN mkdir -p /hepnos/spack
 ENV SPACK_ROOT=/hepnos/spack \
     FORCE_UNSAFE_CONFIGURE=1
 
-LABEL version="4.5"
+LABEL version="0.5"
 # Clone spack and setup its environment
 RUN curl -s -L https://github.com/spack/spack/archive/develop.tar.gz | \
         tar xzC ${SPACK_ROOT} --strip 1 && \
@@ -41,8 +44,11 @@ COPY spack.yaml /hepnos
 # Create the spack environment
 RUN spack env create hepnos-env /hepnos/spack.yaml
 
-# Install the environment
-RUN spack env activate hepnos-env && spack install
+# Concretize the environment
+RUN spack env activate hepnos-env && spack concretize
+
+# Install the environment, cleanup after
+RUN spack env activate hepnos-env && spack install --fail-fast && spack gc -y
 
 WORKDIR /usr/local/diy
 RUN git checkout -- CMakeLists.txt && \
