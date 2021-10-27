@@ -55,6 +55,8 @@ spack:
       - spec: hdf5@1.10.2
         prefix: /cvmfs/nova.opensciencegrid.org/externals/hdf5/v1_10_2a/Linux64bit+2.6-2.12-e15
     libfabric:
+      externals:
+      - spec: libfabric@1.11.1
       variants: fabrics=tcp,rxm
     m4:
       externals:
