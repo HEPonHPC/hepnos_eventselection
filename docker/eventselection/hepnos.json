@@ -1,0 +1,648 @@
+{
+    "__comment__": "Bedrock configuration to use on servers", 
+    "libraries": {
+        "sdskv": "libsdskv-bedrock.so"
+    }, 
+    "ssg": [
+        {
+            "swim": {
+                "disabled": true
+            }, 
+            "bootstrap": "mpi", 
+            "group_file": "hepnos.ssg", 
+            "name": "hepnos"
+        }
+    ], 
+    "providers": [
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-datasets"
+                    }, 
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-runs", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }, 
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-subruns", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 0, 
+            "type": "sdskv", 
+            "name": "hepnos-metadata", 
+            "pool": "__primary__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-0", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 1, 
+            "type": "sdskv", 
+            "name": "hepnos_data_1", 
+            "pool": "__rpc_0__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-1", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 2, 
+            "type": "sdskv", 
+            "name": "hepnos_data_2", 
+            "pool": "__rpc_1__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-2", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 3, 
+            "type": "sdskv", 
+            "name": "hepnos_data_3", 
+            "pool": "__rpc_2__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-3", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 4, 
+            "type": "sdskv", 
+            "name": "hepnos_data_4", 
+            "pool": "__rpc_3__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-4", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 5, 
+            "type": "sdskv", 
+            "name": "hepnos_data_5", 
+            "pool": "__rpc_4__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-5", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 6, 
+            "type": "sdskv", 
+            "name": "hepnos_data_6", 
+            "pool": "__rpc_5__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-6", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 7, 
+            "type": "sdskv", 
+            "name": "hepnos_data_7", 
+            "pool": "__rpc_6__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-events-7", 
+                        "comparator": "hepnos_compare_item_descriptors"
+                    }
+                ]
+            }, 
+            "provider_id": 8, 
+            "type": "sdskv", 
+            "name": "hepnos_data_8", 
+            "pool": "__rpc_7__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-0"
+                    }
+                ]
+            }, 
+            "provider_id": 9, 
+            "type": "sdskv", 
+            "name": "hepnos_data_9", 
+            "pool": "__rpc_8__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-1"
+                    }
+                ]
+            }, 
+            "provider_id": 10, 
+            "type": "sdskv", 
+            "name": "hepnos_data_10", 
+            "pool": "__rpc_9__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-2"
+                    }
+                ]
+            }, 
+            "provider_id": 11, 
+            "type": "sdskv", 
+            "name": "hepnos_data_11", 
+            "pool": "__rpc_10__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-3"
+                    }
+                ]
+            }, 
+            "provider_id": 12, 
+            "type": "sdskv", 
+            "name": "hepnos_data_12", 
+            "pool": "__rpc_11__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-4"
+                    }
+                ]
+            }, 
+            "provider_id": 13, 
+            "type": "sdskv", 
+            "name": "hepnos_data_13", 
+            "pool": "__rpc_12__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-5"
+                    }
+                ]
+            }, 
+            "provider_id": 14, 
+            "type": "sdskv", 
+            "name": "hepnos_data_14", 
+            "pool": "__rpc_13__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-6"
+                    }
+                ]
+            }, 
+            "provider_id": 15, 
+            "type": "sdskv", 
+            "name": "hepnos_data_15", 
+            "pool": "__rpc_14__"
+        }, 
+        {
+            "config": {
+                "comparators": [
+                    {
+                        "name": "hepnos_compare_item_descriptors", 
+                        "library": "libhepnos-service.so"
+                    }
+                ], 
+                "databases": [
+                    {
+                        "no_overwrite": true, 
+                        "type": "map", 
+                        "name": "hepnos-products-7"
+                    }
+                ]
+            }, 
+            "provider_id": 16, 
+            "type": "sdskv", 
+            "name": "hepnos_data_16", 
+            "pool": "__rpc_15__"
+        }
+    ], 
+    "margo": {
+        "mercury": {
+            "na_no_block": false
+        }, 
+        "argobots": {
+            "pools": [
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__primary__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_0__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_1__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_2__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_3__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_4__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_5__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_6__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_7__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_8__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_9__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_10__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_11__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_12__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_13__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_14__"
+                }, 
+                {
+                    "access": "mpmc", 
+                    "type": "prio_wait", 
+                    "name": "__rpc_15__"
+                }
+            ], 
+            "abt_mem_max_num_stacks": 8, 
+            "abt_thread_stacksize": 2097152, 
+            "xstreams": [
+                {
+                    "name": "__primary__", 
+                    "scheduler": {
+                        "pools": [
+                            "__primary__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_0", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_0__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_1", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_1__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_2", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_2__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_3", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_3__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_4", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_4__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_5", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_5__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_6", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_6__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_7", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_7__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_8", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_8__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_9", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_9__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_10", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_10__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_11", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_11__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_12", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_12__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_13", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_13__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_14", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_14__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }, 
+                {
+                    "name": "rpc_es_15", 
+                    "scheduler": {
+                        "pools": [
+                            "__rpc_15__"
+                        ], 
+                        "type": "basic_wait"
+                    }
+                }
+            ]
+        }, 
+        "progress_pool": "__primary__", 
+        "rpc_pool": "__primary__"
+    }
+}

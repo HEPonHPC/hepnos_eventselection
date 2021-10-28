@@ -190,7 +190,7 @@ parse_arguments(int argc, char** argv)
       std::numeric_limits<unsigned>::max(),
       "int");
     TCLAP::SwitchArg preloadProducts(
-      "p", "preload", "Enable preloading products");
+      "e", "preload", "Enable preloading products");
     TCLAP::SwitchArg disableStats(
       "", "disable-stats", "Disable statistics collection");
 
