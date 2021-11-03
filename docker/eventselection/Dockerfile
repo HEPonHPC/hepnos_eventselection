@@ -15,7 +15,7 @@ RUN spack env activate hepnos-env && \
     export CEREAL_INC=`spack location -i cereal`/include && \
     export THALLIUM_INC=`spack location -i mochi-thallium`/include
 
-COPY *.hpp *.cc *.C *.txt *.yaml *.sh /code/
+COPY *.hpp *.cc *.C *.txt *.json *.sh /code/
 
 WORKDIR /code
 
