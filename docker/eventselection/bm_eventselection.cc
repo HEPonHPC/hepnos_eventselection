@@ -54,19 +54,23 @@ static Ostream& operator<<(
   Ostream& os,
   const hepnos::ParallelEventProcessorStatistics& stats);
 
+std::vector<timing_record_for_bm> timingdata; /* global timing data vector, accessible by all functions */
+double ref_time;                              /* reference time */
+
+
 int
 main(int argc, char** argv)
 {
-  // put in time stamp as early as possible
   int provided, required = MPI_THREAD_MULTIPLE;
   MPI_Init_thread(&argc, &argv, required, &provided);
   MPI_Comm_size(MPI_COMM_WORLD, &g_size);
   MPI_Comm_rank(MPI_COMM_WORLD, &g_rank);
+  MPI_Barrier(MPI_COMM_WORLD); /* ensure each rank has a consistent ref_time! */
+  ref_time = MPI_Wtime();
   DisableDepManAll();
   
-  std::vector<timing_record_for_bm> timingdata;
   timingdata.reserve(1000 * 1000); // a wise guess
-  timingdata.push_back({MPI_Wtime(), 0, Steps::start});
+  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::start});
   std::stringstream str_format;
   str_format << "[" << std::setw(6) << std::setfill('0') << g_rank << "|"
              << g_size << "] [%H:%M:%S.%F] [%n] [%^%l%$] %v";
@@ -87,12 +91,14 @@ main(int argc, char** argv)
   spdlog::trace("num threads: {}", g_num_threads);
   spdlog::trace("product names: {}", g_product_names.size());
   spdlog::trace("wait range: {},{}", g_wait_range.first, g_wait_range.second);
-  // time stamp: before checking preloading, data is 0 for no preload and 1 for
-  // preload
+  // time stamp: before checking preloading, data is 0 for no preload and 1 for preload
+  timingdata.push_back({MPI_Wtime()-ref_time, static_cast<size_t>(g_preload_products), Steps::pre_check_preload});
   if (g_preload_products) {
     // time stamp before prepare preload function
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_prepare_preload});
     prepare_preloading_functions();
     // time stamp after prepare prelaod
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_prepare_preload});
     if (g_rank == 0) {
       for (auto& p : g_product_names) {
         if (g_preload_fn.count(p) == 0) {
@@ -104,19 +110,27 @@ main(int argc, char** argv)
     }
   }
   // time stamp: after checking preload, capture g_preload_fn.size()
+  timingdata.push_back({MPI_Wtime()-ref_time, g_preload_fn.size(), Steps::post_check_preload});
   MPI_Barrier(MPI_COMM_WORLD);
-  // time stamp: after Barrier
+  // time stamp: after Barrier 
 
   spdlog::trace("Initializing RNG");
   g_mte = std::mt19937(g_rank);
-  // time stamp: before benchmark
+  // time stamp: before benchmark 
+  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_run_benchmark});
   std::ofstream timingfile(
     fmt::format(
       "{}/timing_{}_{}_{}.dat", g_output_dir, g_rank, g_size, g_num_threads)
       .c_str());
   run_benchmark();
   // time stamp: after benchmark
+  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_run_benchmark});
   MPI_Finalize();
+
+  // Write timing data to file
+  for (auto const &r : timingdata)
+    timingfile << r << '\n';
+
   return 0;
 }
 
@@ -315,14 +329,14 @@ simulate_processing(const hepnos::Event& ev,
   spdlog::trace("Loading products");
 
   std::vector<timing_record_for_bm> timingdata;
-  std::cout << "Processing event: " << ev.number() << '\n';
+  /* std::cout << "Processing event: " << ev.number() << '\n'; */
   hepnos::ProductCache const* pcache = nullptr;
   if (g_preload_products)
     pcache = &cache;
   auto records = ana::create_records(ev, timingdata, pcache);
-  std::cout << "After creating records event\n";
+  /* std::cout << "After creating records event\n"; */
   for (auto const& rec : records) {
-    std::cout << "Processing record: " << rec.hdr.subevt << '\n';
+    /* std::cout << "Processing record: " << rec.hdr.subevt << '\n'; */
     if (ana::good_slice(rec)) {
       std::cout << "passed slice for event: " << ev.number() << ", "
                 << rec.hdr.subevt << '\n';
@@ -456,8 +470,10 @@ run_benchmark()
   try {
     spdlog::trace("Connecting to HEPnOS using file {}", g_connection_file);
     // time stamp before connect
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_connect_datastore});
     datastore = hepnos::DataStore::connect(g_protocol, g_connection_file);
     // time stamp after connect
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_connect_datastore});
   }
   catch (const hepnos::Exception& ex) {
     spdlog::critical("Could not connect to HEPnOS service: {}", ex.what());
@@ -468,20 +484,26 @@ run_benchmark()
 
     spdlog::trace("Creating AsyncEngine with {} threads", g_num_threads);
     // time stamp before async intiialization, capture num threads
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_asyncengine});
     hepnos::AsyncEngine async(datastore, g_num_threads);
     // time stamp after async
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_asyncengine});
 
     spdlog::trace("Creating ParallelEventProcessor");
     // time stamp before PEP intiialization, capture g-pep_options
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_paralleleventprocessor});
     hepnos::ParallelEventProcessor pep(async, MPI_COMM_WORLD, g_pep_options);
     // time stamp after PEP intiialization
-
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_paralleleventprocessor});
+    
     if (g_preload_products) {
       spdlog::trace("Setting preload flags");
       for (auto& p : g_product_names) {
-        // time stamp before preload, store a 32 bit checksum of the string name
+        // time stamp before preload, store a 32 bit checksum of the string name:92
+	timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_preload, p});
         g_preload_fn[p](pep);
         // time stamp after preload
+	timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_preload, p});
         // make another global hash map, value is the counter
       }
     }
@@ -490,8 +512,10 @@ run_benchmark()
     try {
 
       // time stamp before read dataset
+      timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_read_dataset});
       dataset = datastore.root()[g_input_dataset];
       // time stamp after read dataset
+      timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_read_dataset});
     }
     catch (...) {
     }
@@ -501,8 +525,10 @@ run_benchmark()
       exit(-1);
     }
     // time stamp before barrier after dataset
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_post_read_barrier});
     MPI_Barrier(MPI_COMM_WORLD);
     // time stamp after barrier after dataset
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_post_read_barrier});
 
     spdlog::trace("Calling processing function on dataset {}", g_input_dataset);
 
@@ -520,6 +546,7 @@ run_benchmark()
       x.reserve(1000);
     t_start = MPI_Wtime();
     // time stamp pre pep process
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_paralleleventprocessor_process});
     pep.process(
       dataset,
       [&good_slices_per_thread](const hepnos::Event& ev,
@@ -535,8 +562,13 @@ run_benchmark()
       },
       stats_ptr);
     // time stamp post pep process
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_paralleleventprocessor_process});
+
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_paralleleventprocessor_process_barrier});
     MPI_Barrier(MPI_COMM_WORLD);
     // time stamp post pep process barrier
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_paralleleventprocessor_process_barrier});
+
     t_end = MPI_Wtime();
 
     SliceIDs good_slices = std::accumulate(

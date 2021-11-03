@@ -13,6 +13,10 @@ enum class Steps {
   post_init_asyncengine,
   pre_init_paralleleventprocessor,
   post_init_paralleleventprocessor,
+  pre_paralleleventprocessor_process,
+  post_paralleleventprocessor_process,
+  pre_paralleleventprocessor_process_barrier,
+  post_paralleleventprocessor_process_barrier,
   pre_check_preload,
   post_check_preload,
   pre_prepare_preload,
@@ -27,7 +31,7 @@ enum class Steps {
   finish
 };
 
-inline std::ostream&
+  inline std::ostream&
 operator<<(std::ostream& os, Steps s)
 {
   switch (s) {
@@ -57,6 +61,18 @@ operator<<(std::ostream& os, Steps s)
       break;
     case Steps::post_init_paralleleventprocessor:
       os << "post_init_paralleleventprocessor";
+      break;
+    case Steps::pre_paralleleventprocessor_process:
+      os << "pre_paralleleventprocessor_process";
+      break;
+    case Steps::post_paralleleventprocessor_process:
+      os << "post_paralleleventprocessor_process";
+      break;
+    case Steps::pre_paralleleventprocessor_process_barrier:
+      os << "pre_paralleleventprocessor_process_barrier";
+      break;
+    case Steps::post_paralleleventprocessor_process_barrier:
+      os << "post_paralleleventprocessor_process_barrier";
       break;
     case Steps::pre_check_preload:
       os << "pre_check_preload";
@@ -99,15 +115,22 @@ operator<<(std::ostream& os, Steps s)
 }
 
 struct timing_record_for_bm {
+  timing_record_for_bm(double t, std::size_t id, Steps st):ts(t),idata(id),s(st){};
+
+  timing_record_for_bm(double t, std::size_t id, Steps st, const std::string& sname):ts(t),idata(id),s(st),sdata(sname){};
+
   double ts;
-  std::size_t data;
+  std::size_t idata=0;
   Steps s;
+  std::string sdata;
 };
 
-inline std::ostream&
+
+
+  inline std::ostream&
 operator<<(std::ostream& os, timing_record_for_bm const& r)
 {
-  os << r.ts << ',' << r.data << ',' << r.s;
+  os << r.ts << ',' << r.idata << ',' << r.sdata << ',' << r.s;
   return os;
 }
 
