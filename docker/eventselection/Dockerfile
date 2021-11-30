@@ -22,7 +22,7 @@ WORKDIR /code
 RUN spack env activate hepnos-env && \
     mkdir build && \
     cd build && \
-    cmake -DCMAKE_BUILD_TYPE=Release \
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DMPI_HOME=/mpich \
           -DCMAKE_CXX_COMPILER=$(which g++) \
           -DCMAKE_C_COMPILER=$(which gcc) \
