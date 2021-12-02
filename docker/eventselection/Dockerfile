@@ -23,13 +23,9 @@ RUN spack env activate hepnos-env && \
     mkdir build && \
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-          -DMPI_HOME=/mpich \
           -DCMAKE_CXX_COMPILER=$(which g++) \
           -DCMAKE_C_COMPILER=$(which gcc) \
           -DDIY_INCLUDE_DIRS=/usr/local/diy/include .. && \
     make -j8
 
-RUN spack env activate hepnos-env && \
-    cd build && \
-    make 
-
+RUN patchelf --remove-rpath /code/build/bm_eventselection

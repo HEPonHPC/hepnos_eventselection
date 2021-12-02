@@ -19,6 +19,8 @@ RUN wget https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/Packages/p
     rpm -i patchelf-0.9-10.el6.x86_64.rpm && \
     rm patchelf-0.9-10.el6.x86_64.rpm
 
+RUN rm -rf /mpich
+
 #RUN setup upd && \
 #    upd install forge_tools v19_0_3
 
@@ -29,7 +31,8 @@ ENV SPACK_ROOT=/hepnos/spack \
 
 LABEL version="0.5"
 # Clone spack and setup its environment
-RUN curl -s -L https://github.com/spack/spack/archive/develop.tar.gz | \
+# spack@develop no longer supports python 2.6! Use the last release instead.
+RUN curl -s -L https://github.com/spack/spack/releases/download/v0.17.0/spack-0.17.0.tar.gz | \
         tar xzC ${SPACK_ROOT} --strip 1 && \
     echo "source $SPACK_ROOT/share/spack/setup-env.sh" >> /etc/profile.d/spack.sh
 
