@@ -44,7 +44,7 @@ RUN git clone https://github.com/mochi-hpc/mochi-spack-packages.git /hepnos/moch
 # Copy spack.yaml environment file to /hepnos
 COPY spack.yaml /hepnos
 
-COPY /hepnos/spack/etc/spack/defaults/config.yaml /hepnos/spack/etc/spack/config.yaml
+RUN mv /hepnos/spack/etc/spack/defaults/config.yaml /hepnos/spack/etc/spack/config.yaml
 RUN sed -i 's/rpath/runpath/g' /hepnos/spack/etc/spack/config.yaml
 
 # Create the spack environment
