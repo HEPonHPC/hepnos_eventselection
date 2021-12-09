@@ -113,6 +113,7 @@ main(int argc, char** argv)
   timingdata.push_back({MPI_Wtime()-ref_time, g_preload_fn.size(), Steps::post_check_preload});
   MPI_Barrier(MPI_COMM_WORLD);
   // time stamp: after Barrier 
+  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_barrier});
 
   spdlog::trace("Initializing RNG");
   g_mte = std::mt19937(g_rank);
@@ -126,6 +127,9 @@ main(int argc, char** argv)
   // time stamp: after benchmark
   timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_run_benchmark});
   MPI_Finalize();
+
+  // time stamp: after MPI finalize
+  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::finish});
 
   // Write timing data to file
   for (auto const &r : timingdata)

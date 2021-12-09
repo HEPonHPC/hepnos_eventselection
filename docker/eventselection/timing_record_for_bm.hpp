@@ -23,7 +23,7 @@ enum class Steps {
   post_prepare_preload,
   pre_preload,
   post_preload,
-  pre_barrier,
+  post_barrier,
   pre_run_benchmark,
   post_run_benchmark,
   pre_post_read_barrier,
@@ -92,8 +92,8 @@ operator<<(std::ostream& os, Steps s)
     case Steps::post_preload:
       os << "post_preload";
       break;
-    case Steps::pre_barrier:
-      os << "pre_barrier";
+    case Steps::post_barrier:
+      os << "post_barrier";
       break;
     case Steps::pre_run_benchmark:
       os << "pre_run_benchmark";
