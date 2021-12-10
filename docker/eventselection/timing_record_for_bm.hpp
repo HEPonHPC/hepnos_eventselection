@@ -28,16 +28,12 @@ enum class Steps {
   post_run_benchmark,
   pre_post_read_barrier,
   post_post_read_barrier,
-  finish
 };
 
   inline std::ostream&
 operator<<(std::ostream& os, Steps s)
 {
   switch (s) {
-    case Steps::finish:
-      os << "finish";
-      break;
     case Steps::pre_connect_datastore:
       os << "pre_connect_datastore";
       break;

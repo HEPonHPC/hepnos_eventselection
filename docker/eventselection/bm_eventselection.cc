@@ -128,9 +128,6 @@ main(int argc, char** argv)
   timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_run_benchmark});
   MPI_Finalize();
 
-  // time stamp: after MPI finalize
-  timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::finish});
-
   // Write timing data to file
   for (auto const &r : timingdata)
     timingfile << r << '\n';
