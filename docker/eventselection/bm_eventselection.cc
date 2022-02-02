@@ -34,31 +34,31 @@ static std::vector<std::string> g_product_names;
 static bool g_preload_products;
 static std::pair<double, double> g_wait_range;
 static std::unordered_map<std::string,
-                          std::function<void(hepnos::ParallelEventProcessor&)>>
+  std::function<void(hepnos::ParallelEventProcessor&)>>
   g_preload_fn;
-static std::mt19937 g_mte;
-static hepnos::ParallelEventProcessorOptions g_pep_options;
-static bool g_disable_stats;
+  static std::mt19937 g_mte;
+  static hepnos::ParallelEventProcessorOptions g_pep_options;
+  static bool g_disable_stats;
 
-static void parse_arguments(int argc, char** argv);
-static std::pair<double, double> parse_wait_range(const std::string&);
-static std::string check_file_exists(const std::string& filename);
-static void prepare_preloading_functions();
-static void gather_results(int local_slice_count,
-                           SliceIDs const& good_slices,
-                           int g_rank,
-                           std::string g_output_dir);
+  static void parse_arguments(int argc, char** argv);
+  static std::pair<double, double> parse_wait_range(const std::string&);
+  static std::string check_file_exists(const std::string& filename);
+  static void prepare_preloading_functions();
+  static void gather_results(int local_slice_count,
+      SliceIDs const& good_slices,
+      int g_rank,
+      std::string g_output_dir);
 static void run_benchmark();
 template <typename Ostream>
 static Ostream& operator<<(
-  Ostream& os,
-  const hepnos::ParallelEventProcessorStatistics& stats);
+    Ostream& os,
+    const hepnos::ParallelEventProcessorStatistics& stats);
 
 std::vector<timing_record_for_bm> timingdata; /* global timing data vector, accessible by all functions */
 double ref_time;                              /* reference time */
 
 
-int
+  int
 main(int argc, char** argv)
 {
   int provided, required = MPI_THREAD_MULTIPLE;
@@ -68,12 +68,12 @@ main(int argc, char** argv)
   MPI_Barrier(MPI_COMM_WORLD); /* ensure each rank has a consistent ref_time! */
   ref_time = MPI_Wtime();
   DisableDepManAll();
-  
+
   timingdata.reserve(1000 * 1000); // a wise guess
   timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::start});
   std::stringstream str_format;
   str_format << "[" << std::setw(6) << std::setfill('0') << g_rank << "|"
-             << g_size << "] [%H:%M:%S.%F] [%n] [%^%l%$] %v";
+    << g_size << "] [%H:%M:%S.%F] [%n] [%^%l%$] %v";
   spdlog::set_pattern(str_format.str());
 
   parse_arguments(argc, argv);
@@ -112,16 +112,16 @@ main(int argc, char** argv)
   // time stamp: after checking preload, capture g_preload_fn.size()
   timingdata.push_back({MPI_Wtime()-ref_time, g_preload_fn.size(), Steps::post_check_preload});
   MPI_Barrier(MPI_COMM_WORLD);
-  // time stamp: after Barrier 
+  // time stamp: after Barrier
   timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_barrier});
 
   spdlog::trace("Initializing RNG");
   g_mte = std::mt19937(g_rank);
-  // time stamp: before benchmark 
+  // time stamp: before benchmark
   timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_run_benchmark});
   std::ofstream timingfile(
-    fmt::format(
-      "{}/timing_{}_{}_{}.dat", g_output_dir, g_rank, g_size, g_num_threads)
+      fmt::format(
+        "{}/timing_{}_{}_{}.dat", g_output_dir, g_rank, g_size, g_num_threads)
       .c_str());
   run_benchmark();
   // time stamp: after benchmark
@@ -135,79 +135,79 @@ main(int argc, char** argv)
   return 0;
 }
 
-static void
+  static void
 parse_arguments(int argc, char** argv)
 {
   try {
     TCLAP::CmdLine cmd("Benchmark HEPnOS Parallel Event Processor", ' ', "0.1");
     // mandatory arguments
     TCLAP::ValueArg<std::string> clientFile(
-      "c", "connection", "JSON connection file for HEPnOS", true, "", "string");
+        "c", "connection", "JSON connection file for HEPnOS", true, "", "string");
     TCLAP::ValueArg<std::string> protocol(
-      "p", "protocol", "Protocol to connect to HEPnOS", true, "", "string");
+        "p", "protocol", "Protocol to connect to HEPnOS", true, "", "string");
     TCLAP::ValueArg<std::string> outDir(
-      "O", "out", "Output directory for timing and output", true, "", "string");
+        "O", "out", "Output directory for timing and output", true, "", "string");
     TCLAP::ValueArg<std::string> dataSetName(
-      "d",
-      "dataset",
-      "DataSet from which to load the data",
-      true,
-      "",
-      "string");
+        "d",
+        "dataset",
+        "DataSet from which to load the data",
+        true,
+        "",
+        "string");
     TCLAP::ValueArg<std::string> productLabel(
-      "l", "label", "Label to use when storing products", true, "", "string");
+        "l", "label", "Label to use when storing products", true, "", "string");
     // optional arguments
     std::vector<std::string> allowed = {
       "trace", "debug", "info", "warning", "error", "critical", "off"};
     TCLAP::ValuesConstraint<std::string> allowedVals(allowed);
     TCLAP::ValueArg<std::string> loggingLevel(
-      "v",
-      "verbose",
-      "Logging output type (info, debug, critical)",
-      false,
-      "info",
-      &allowedVals);
+        "v",
+        "verbose",
+        "Logging output type (info, debug, critical)",
+        false,
+        "info",
+        &allowedVals);
     TCLAP::ValueArg<unsigned> numThreads(
-      "t",
-      "threads",
-      "Number of threads to run processing work",
-      false,
-      0,
-      "int");
+        "t",
+        "threads",
+        "Number of threads to run processing work",
+        false,
+        0,
+        "int");
     TCLAP::MultiArg<std::string> productNames(
-      "n", "product-names", "Name of the products to load", false, "string");
+        "n", "product-names", "Name of the products to load", false, "string");
     TCLAP::ValueArg<std::string> waitRange(
-      "r",
-      "wait-range",
-      "Waiting time interval in seconds (e.g. 1.34,3.56)",
-      false,
-      "0,0",
-      "x,y");
+        "r",
+        "wait-range",
+        "Waiting time interval in seconds (e.g. 1.34,3.56)",
+        false,
+        "0,0",
+        "x,y");
     TCLAP::ValueArg<unsigned> inputBatchSize(
-      "i",
-      "input-batch-size",
-      "Input batch size for parallel event processor",
-      false,
-      16,
-      "int");
+        "i",
+        "input-batch-size",
+        "Input batch size for parallel event processor",
+        false,
+        16,
+        "int");
     TCLAP::ValueArg<unsigned> outputBatchSize(
-      "o",
-      "output-batch-size",
-      "Output batch size for parallel event processor",
-      false,
-      16,
-      "int");
+        "o",
+        "output-batch-size",
+        "Output batch size for parallel event processor",
+        false,
+        16,
+        "int");
     TCLAP::ValueArg<unsigned> cacheSize(
-      "s",
-      "cache-size",
-      "Prefetcher cache size for parallel event processor",
-      false,
-      std::numeric_limits<unsigned>::max(),
-      "int");
+        "s",
+        "cache-size",
+        "Prefetcher cache size for parallel event processor",
+        false,
+        std::numeric_limits<unsigned>::max(),
+        "int");
     TCLAP::SwitchArg preloadProducts(
-      "e", "preload", "Enable preloading products");
+        "e", "preload", "Enable preloading products");
     TCLAP::SwitchArg disableStats(
-      "", "disable-stats", "Disable statistics collection");
+        "", "disable-stats", "Disable statistics collection");
 
     cmd.add(clientFile);
     cmd.add(protocol);
@@ -250,12 +250,12 @@ parse_arguments(int argc, char** argv)
   }
 }
 
-static std::pair<double, double>
+  static std::pair<double, double>
 parse_wait_range(const std::string& s)
 {
   std::pair<double, double> range = {0.0, 0.0};
   std::regex rgx(
-    "^((0|([1-9][0-9]*))(\\.[0-9]+)?)(,((0|([1-9][0-9]*))(\\.[0-9]+)?))?$");
+      "^((0|([1-9][0-9]*))(\\.[0-9]+)?)(,((0|([1-9][0-9]*))(\\.[0-9]+)?))?$");
   // groups 1 and 6 will contain the two numbers
   std::smatch matches;
 
@@ -269,17 +269,17 @@ parse_wait_range(const std::string& s)
   } else {
     if (g_rank == 0) {
       spdlog::critical("Invalid wait range expression {} (should be \"x,y\" "
-                       "where x and y are floats)",
-                       s);
+          "where x and y are floats)",
+          s);
       MPI_Abort(MPI_COMM_WORLD, -1);
       exit(-1);
     }
   }
   if (range.second < range.first) {
     spdlog::critical("Invalid wait range expression {} ({} < {})",
-                     s,
-                     range.second,
-                     range.first);
+        s,
+        range.second,
+        range.first);
     MPI_Abort(MPI_COMM_WORLD, -1);
     exit(-1);
   }
@@ -287,7 +287,7 @@ parse_wait_range(const std::string& s)
   return range;
 }
 
-static std::string
+  static std::string
 check_file_exists(const std::string& filename)
 {
   spdlog::trace("Checking if file {} exists", filename);
@@ -302,30 +302,30 @@ check_file_exists(const std::string& filename)
   return "";
 }
 
-static void
+  static void
 prepare_preloading_functions()
 {
   spdlog::trace("Preparing functions for loading producs");
 #define X(__class__)                                                           \
   spdlog::trace(                                                               \
-    "Setting preloading function for product of type " #__class__);            \
+      "Setting preloading function for product of type " #__class__);            \
   g_preload_fn[#__class__] = [](hepnos::ParallelEventProcessor& pep) {         \
     spdlog::trace("Will preload products of type " #__class__);                \
     pep.preload<std::vector<__class__>>(g_product_label);                      \
   };
 
   X(dummy_product)
-  HEPNOS_FOREACH_NOVA_CLASS
+    HEPNOS_FOREACH_NOVA_CLASS
 #undef X
-  spdlog::trace("Created preloading functions for {} product types",
-                g_preload_fn.size());
+    spdlog::trace("Created preloading functions for {} product types",
+        g_preload_fn.size());
 }
 
-static void
+  static void
 simulate_processing(const hepnos::Event& ev,
-                    const hepnos::ProductCache& cache,
-                    std::vector<SliceIDs>& good_slices_per_thread,
-                    int thread_id)
+    const hepnos::ProductCache& cache,
+    std::vector<SliceIDs>& good_slices_per_thread,
+    int thread_id)
 {
   spdlog::trace("Loading products");
 
@@ -340,71 +340,71 @@ simulate_processing(const hepnos::Event& ev,
     /* std::cout << "Processing record: " << rec.hdr.subevt << '\n'; */
     if (ana::good_slice(rec)) {
       std::cout << "passed slice for event: " << ev.number() << ", "
-                << rec.hdr.subevt << '\n';
+        << rec.hdr.subevt << '\n';
       SliceID sid{ev.subrun().run().number(),
-                  ev.subrun().number(),
-                  ev.number(),
-                  rec.hdr.subevt};
+        ev.subrun().number(),
+        ev.number(),
+        rec.hdr.subevt};
       good_slices_per_thread[thread_id].push_back(sid);
     }
   }
 }
 
-static void
+  static void
 gather_results(int local_slice_count,
-               SliceIDs const& good_slices,
-               int g_rank,
-               std::string g_output_dir)
+    SliceIDs const& good_slices,
+    int g_rank,
+    std::string g_output_dir)
 {
   if (g_rank != 0) {
     MPI_Gather(
-      &local_slice_count, 1, MPI_INT, NULL, 0, MPI_INT, 0, MPI_COMM_WORLD);
+        &local_slice_count, 1, MPI_INT, NULL, 0, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.runs.data(),
-                local_slice_count,
-                MPI_INT,
-                NULL,
-                NULL,
-                NULL,
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        NULL,
+        NULL,
+        NULL,
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.subRuns.data(),
-                local_slice_count,
-                MPI_INT,
-                NULL,
-                NULL,
-                NULL,
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        NULL,
+        NULL,
+        NULL,
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.events.data(),
-                local_slice_count,
-                MPI_INT,
-                NULL,
-                NULL,
-                NULL,
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        NULL,
+        NULL,
+        NULL,
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.slices.data(),
-                local_slice_count,
-                MPI_INT,
-                NULL,
-                NULL,
-                NULL,
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        NULL,
+        NULL,
+        NULL,
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
   } else {
     std::vector<int> slice_count(g_size);
     MPI_Gather(&local_slice_count,
-               1,
-               MPI_INT,
-               slice_count.data(),
-               1,
-               MPI_INT,
-               0,
-               MPI_COMM_WORLD);
+        1,
+        MPI_INT,
+        slice_count.data(),
+        1,
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     const std::size_t total_length =
       std::accumulate(std::begin(slice_count), std::end(slice_count), 0);
     std::vector<int> runs(total_length);
@@ -415,54 +415,54 @@ gather_results(int local_slice_count,
     std::vector<int> offsets(g_size);
     offsets[0] = 0;
     std::partial_sum(std::begin(slice_count),
-                     std::end(slice_count) - 1,
-                     std::begin(offsets) + 1);
+        std::end(slice_count) - 1,
+        std::begin(offsets) + 1);
 
     MPI_Gatherv(good_slices.runs.data(),
-                local_slice_count,
-                MPI_INT,
-                runs.data(),
-                slice_count.data(),
-                offsets.data(),
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        runs.data(),
+        slice_count.data(),
+        offsets.data(),
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.subRuns.data(),
-                local_slice_count,
-                MPI_INT,
-                subRuns.data(),
-                slice_count.data(),
-                offsets.data(),
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        subRuns.data(),
+        slice_count.data(),
+        offsets.data(),
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.events.data(),
-                local_slice_count,
-                MPI_INT,
-                events.data(),
-                slice_count.data(),
-                offsets.data(),
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        events.data(),
+        slice_count.data(),
+        offsets.data(),
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
     MPI_Gatherv(good_slices.slices.data(),
-                local_slice_count,
-                MPI_INT,
-                slices.data(),
-                slice_count.data(),
-                offsets.data(),
-                MPI_INT,
-                0,
-                MPI_COMM_WORLD);
+        local_slice_count,
+        MPI_INT,
+        slices.data(),
+        slice_count.data(),
+        offsets.data(),
+        MPI_INT,
+        0,
+        MPI_COMM_WORLD);
 
     // write output
     std::ofstream outfile(
-      fmt::format("{}/out.dat", g_output_dir, g_rank).c_str());
+        fmt::format("{}/out.dat", g_output_dir, g_rank).c_str());
     SliceIDs sids{runs, subRuns, events, slices};
     outfile << sids;
   }
 }
-static void
+  static void
 run_benchmark()
 {
 
@@ -492,19 +492,19 @@ run_benchmark()
 
     spdlog::trace("Creating ParallelEventProcessor");
     // time stamp before PEP intiialization, capture g-pep_options
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_paralleleventprocessor});
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_pep});
     hepnos::ParallelEventProcessor pep(async, MPI_COMM_WORLD, g_pep_options);
     // time stamp after PEP intiialization
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_paralleleventprocessor});
-    
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_pep});
+
     if (g_preload_products) {
       spdlog::trace("Setting preload flags");
       for (auto& p : g_product_names) {
         // time stamp before preload, store a 32 bit checksum of the string name:92
-	timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_preload, p});
+        timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_preload, p});
         g_preload_fn[p](pep);
         // time stamp after preload
-	timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_preload, p});
+        timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_preload, p});
         // make another global hash map, value is the counter
       }
     }
@@ -547,36 +547,35 @@ run_benchmark()
       x.reserve(1000);
     t_start = MPI_Wtime();
     // time stamp pre pep process
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_paralleleventprocessor_process});
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_pep_process});
     pep.process(
-      dataset,
-      [&good_slices_per_thread](const hepnos::Event& ev,
-                                const hepnos::ProductCache& cache) {
+        dataset,
+        [&good_slices_per_thread](const hepnos::Event& ev,
+          const hepnos::ProductCache& cache) {
         auto subrun = ev.subrun();
         auto run = subrun.run();
         spdlog::trace("Processing event {} from subrun {} from run {}",
-                      ev.number(),
-                      subrun.number(),
-                      run.number());
+            ev.number(),
+            subrun.number(),
+            run.number());
         auto thread_id = thallium::xstream::self().get_rank() - 1;
         simulate_processing(ev, cache, good_slices_per_thread, thread_id);
-      },
-      stats_ptr);
+        },
+        stats_ptr);
     // time stamp post pep process
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_paralleleventprocessor_process});
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_pep_process});
 
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_paralleleventprocessor_process_barrier});
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_pep_process_barrier});
     MPI_Barrier(MPI_COMM_WORLD);
     // time stamp post pep process barrier
-    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_paralleleventprocessor_process_barrier});
+    timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_pep_process_barrier});
 
     t_end = MPI_Wtime();
 
     SliceIDs good_slices = std::accumulate(
-      good_slices_per_thread.begin(), good_slices_per_thread.end(), SliceIDs{});
+        good_slices_per_thread.begin(), good_slices_per_thread.end(), SliceIDs{});
 
     // Now gather results from all MPI ranks and write to out file
-
     int local_slice_count = good_slices.size();
 
     // Rank 0 will first get all the counts of passed slices in slice_count,
@@ -593,23 +592,23 @@ run_benchmark()
   }
 
   MPI_Barrier(MPI_COMM_WORLD);
-    // time stamp post gather results barrier
+  // time stamp post gather results barrier
   if (g_rank == 0)
     spdlog::info("Benchmark completed in {} seconds", t_end - t_start);
 }
 
 template <typename Ostream>
-static Ostream&
+  static Ostream&
 operator<<(Ostream& os, const hepnos::ParallelEventProcessorStatistics& stats)
 {
   os << "{ \"total_events_processed\" : " << stats.total_events_processed << ","
-     << " \"local_events_processed\" : " << stats.local_events_processed << ","
-     << " \"total_time\" : " << stats.total_time << ","
-     << " \"acc_event_processing_time\" : " << stats.acc_event_processing_time
-     << ","
-     << " \"acc_product_loading_time\" : " << stats.acc_product_loading_time
-     << ","
-     << " \"processing_time_stats\" : " << stats.processing_time_stats << ","
-     << " \"waiting_time_stats\" : " << stats.waiting_time_stats << "}";
+    << " \"local_events_processed\" : " << stats.local_events_processed << ","
+    << " \"total_time\" : " << stats.total_time << ","
+    << " \"acc_event_processing_time\" : " << stats.acc_event_processing_time
+    << ","
+    << " \"acc_product_loading_time\" : " << stats.acc_product_loading_time
+    << ","
+    << " \"processing_time_stats\" : " << stats.processing_time_stats << ","
+    << " \"waiting_time_stats\" : " << stats.waiting_time_stats << "}";
   return os;
 }

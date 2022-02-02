@@ -11,12 +11,12 @@ enum class Steps {
   post_read_dataset,
   pre_init_asyncengine,
   post_init_asyncengine,
-  pre_init_paralleleventprocessor,
-  post_init_paralleleventprocessor,
-  pre_paralleleventprocessor_process,
-  post_paralleleventprocessor_process,
-  pre_paralleleventprocessor_process_barrier,
-  post_paralleleventprocessor_process_barrier,
+  pre_init_pep,
+  post_init_pep,
+  pre_pep_process,
+  post_pep_process,
+  pre_pep_process_barrier,
+  post_pep_process_barrier,
   pre_check_preload,
   post_check_preload,
   pre_prepare_preload,
@@ -52,23 +52,23 @@ operator<<(std::ostream& os, Steps s)
     case Steps::post_init_asyncengine:
       os << "post_init_asyncengine";
       break;
-    case Steps::pre_init_paralleleventprocessor:
-      os << "pre_init_paralleleventprocessor";
+    case Steps::pre_init_pep:
+      os << "pre_init_pep";
       break;
-    case Steps::post_init_paralleleventprocessor:
-      os << "post_init_paralleleventprocessor";
+    case Steps::post_init_pep:
+      os << "post_init_pep";
       break;
-    case Steps::pre_paralleleventprocessor_process:
-      os << "pre_paralleleventprocessor_process";
+    case Steps::pre_pep_process:
+      os << "pre_pep_process";
       break;
-    case Steps::post_paralleleventprocessor_process:
-      os << "post_paralleleventprocessor_process";
+    case Steps::post_pep_process:
+      os << "post_pep_process";
       break;
-    case Steps::pre_paralleleventprocessor_process_barrier:
-      os << "pre_paralleleventprocessor_process_barrier";
+    case Steps::pre_pep_process_barrier:
+      os << "pre_pep_process_barrier";
       break;
-    case Steps::post_paralleleventprocessor_process_barrier:
-      os << "post_paralleleventprocessor_process_barrier";
+    case Steps::post_pep_process_barrier:
+      os << "post_pep_process_barrier";
       break;
     case Steps::pre_check_preload:
       os << "pre_check_preload";
