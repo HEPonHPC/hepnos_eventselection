@@ -8,6 +8,7 @@
 #include <fstream>
 #include <hepnos.hpp>
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <regex>
 #include <spdlog/fmt/ostr.h>
@@ -207,7 +208,10 @@ parse_arguments(int argc, char** argv)
     TCLAP::SwitchArg preloadProducts(
         "e", "preload", "Enable preloading products");
     TCLAP::SwitchArg disableStats(
-        "", "disable-stats", "Disable statistics collection");
+        "",
+        "disable-stats",
+        "Disable statistics collection",
+        false);
 
     cmd.add(clientFile);
     cmd.add(protocol);
@@ -239,7 +243,9 @@ parse_arguments(int argc, char** argv)
     g_pep_options.inputBatchSize = inputBatchSize.getValue();
     g_pep_options.outputBatchSize = outputBatchSize.getValue();
     g_pep_options.cacheSize = cacheSize.getValue();
-    g_disable_stats = disableStats.getValue();
+    //g_disable_stats = disableStats.getValue();
+    g_disable_stats = false;
+
   }
   catch (TCLAP::ArgException& e) {
     if (g_rank == 0) {
@@ -564,6 +570,11 @@ run_benchmark()
         stats_ptr);
     // time stamp post pep process
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_pep_process});
+
+    // Hacky way of detecting a hang for now.
+    std::ofstream debugfstr; (fmt::format("debug_{}.txt", g_rank).c_str(), std::ofstream::out);
+    debugfstr << "hello from rank " << g_rank ;
+    debugfstr.close();
 
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_pep_process_barrier});
     MPI_Barrier(MPI_COMM_WORLD);

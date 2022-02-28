@@ -55,10 +55,3 @@ RUN spack env activate hepnos-env && spack -dd concretize -f
 
 # Install the environment, cleanup after
 RUN spack env activate hepnos-env && spack install --fail-fast && spack gc -y
-
-WORKDIR /usr/local/diy
-RUN git checkout -- CMakeLists.txt && \
-    git checkout -- examples/simple/until-done.cpp && \
-    git pull && \
-    git checkout d2ee1c5ce8b22baf47e29cb090bd3762aef31344
-
