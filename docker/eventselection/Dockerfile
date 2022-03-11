@@ -1,9 +1,9 @@
-FROM heponhpc/hepnos:0.6
+FROM heponhpc/hepnos:0.6.2
 MAINTAINER ssehrish@fnal.gov
 
 WORKDIR /code
 
-LABEL version="1.69"
+LABEL version="1.70"
 
 RUN spack env activate hepnos-env && \
     export PATH=$PATH:/mpich/bin && \
