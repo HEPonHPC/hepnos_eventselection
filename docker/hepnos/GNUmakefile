@@ -3,14 +3,14 @@
 NAME = heponhpc/hepnos
 
 # Remember to increment VERSION as you make new versions!
-VERSION = 0.6.3
+VERSION = 0.6.4
 
 .PHONY: all build tag_latest release test shell
 
 all: build
 
 build:
-	docker build --tag $(NAME):$(VERSION) --network host $(PWD) --no-cache
+	docker build --tag $(NAME):$(VERSION) --network host $(PWD)
 
 tag_latest: build
 	docker tag $(NAME):$(VERSION) $(NAME):latest

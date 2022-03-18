@@ -26,7 +26,7 @@ RUN mkdir -p /hepnos/spack
 ENV SPACK_ROOT=/hepnos/spack \
     FORCE_UNSAFE_CONFIGURE=1
 
-LABEL version="0.6.2"
+LABEL version="0.6.4"
 # Clone spack and setup its environment
 # spack@develop no longer supports python 2.6! Use the last release instead.
 RUN curl -s -L https://github.com/spack/spack/releases/download/v0.17.0/spack-0.17.0.tar.gz | \

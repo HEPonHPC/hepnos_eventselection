@@ -37,6 +37,7 @@ static std::pair<double, double> g_wait_range;
 static std::unordered_map<std::string,
   std::function<void(hepnos::ParallelEventProcessor&)>>
   g_preload_fn;
+
   static std::mt19937 g_mte;
   static hepnos::ParallelEventProcessorOptions g_pep_options;
   static bool g_disable_stats;
@@ -243,6 +244,7 @@ parse_arguments(int argc, char** argv)
     g_pep_options.inputBatchSize = inputBatchSize.getValue();
     g_pep_options.outputBatchSize = outputBatchSize.getValue();
     g_pep_options.cacheSize = cacheSize.getValue();
+    g_pep_options.use_rdma = false;
     //g_disable_stats = disableStats.getValue();
     g_disable_stats = false;
 
