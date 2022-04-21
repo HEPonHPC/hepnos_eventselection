@@ -477,7 +477,7 @@ run_benchmark()
   double t_start, t_end;
   hepnos::DataStore datastore;
   try {
-    spdlog::trace("Connecting to HEPnOS using file {}", g_connection_file);
+    spdlog::info("Connecting to HEPnOS using file {}", g_connection_file);
     // time stamp before connect
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_connect_datastore});
     datastore = hepnos::DataStore::connect(g_protocol, g_connection_file);
@@ -491,14 +491,14 @@ run_benchmark()
 
   {
 
-    spdlog::trace("Creating AsyncEngine with {} threads", g_num_threads);
+    spdlog::info("Creating AsyncEngine with {} threads", g_num_threads);
     // time stamp before async intiialization, capture num threads
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_asyncengine});
     hepnos::AsyncEngine async(datastore, g_num_threads);
     // time stamp after async
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_asyncengine});
 
-    spdlog::trace("Creating ParallelEventProcessor");
+    spdlog::info("Creating ParallelEventProcessor");
     // time stamp before PEP intiialization, capture g-pep_options
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_init_pep});
     hepnos::ParallelEventProcessor pep(async, MPI_COMM_WORLD, g_pep_options);
@@ -506,7 +506,7 @@ run_benchmark()
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_init_pep});
 
     if (g_preload_products) {
-      spdlog::trace("Setting preload flags");
+      spdlog::info("Setting preload flags");
       for (auto& p : g_product_names) {
         // time stamp before preload, store a 32 bit checksum of the string name:92
         timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_preload, p});
@@ -516,7 +516,7 @@ run_benchmark()
         // make another global hash map, value is the counter
       }
     }
-    spdlog::trace("Loading dataset");
+    spdlog::info("Loading dataset");
     hepnos::DataSet dataset;
     try {
 
@@ -539,7 +539,7 @@ run_benchmark()
     // time stamp after barrier after dataset
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_post_read_barrier});
 
-    spdlog::trace("Calling processing function on dataset {}", g_input_dataset);
+    spdlog::info("Calling processing function on dataset {}", g_input_dataset);
 
     hepnos::ParallelEventProcessorStatistics stats;
     hepnos::ParallelEventProcessorStatistics* stats_ptr = &stats;
