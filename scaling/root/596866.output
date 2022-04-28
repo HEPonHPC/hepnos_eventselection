@@ -1,0 +1,46 @@
+COBALT_JOBID =  596866
+COBALT_JOBSIZE (nodes) = 128
+COBALT_PARTNAME =  2616-2617,2619,2669,2761-2763,2890-2893,2965,3001,3004-3007,3070-3071,3074,3094,3100-3106,3108,3250-3251,3254,3256,3259,3284,3293,3298-3299,3334,3456-3459,3580-3584,3586,3647,3664-3665,3668,3670-3679,3705,3747,3850-3859,3920-3925,3927-3929,3992,3997,4012,4082-4083,4088,4091-4099,4141-4149,4260,4278-4279,4289,4305,4307-4309,4350,4371,4401,4497,4540-4541,4550,4558-4559,4580,4585-4586
+%%% start Wed Apr 27 03:16:33 UTC 2022
+%%% after_module_loads Wed Apr 27 03:16:34 UTC 2022
+%%% before eventselection with 16 run number 1 at Wed Apr 27 03:16:34 UTC 2022
+%%% after eventselection with 16 run number 1 at Wed Apr 27 03:20:18 UTC 2022
+%%% before eventselection with 32 run number 1 at Wed Apr 27 03:20:18 UTC 2022
+%%% after eventselection with 32 run number 1 at Wed Apr 27 03:22:54 UTC 2022
+%%% before eventselection with 64 run number 1 at Wed Apr 27 03:22:54 UTC 2022
+%%% after eventselection with 64 run number 1 at Wed Apr 27 03:25:06 UTC 2022
+%%% before eventselection with 128 run number 1 at Wed Apr 27 03:25:06 UTC 2022
+%%% after eventselection with 128 run number 1 at Wed Apr 27 03:27:47 UTC 2022
+%%% before eventselection with 16 run number 2 at Wed Apr 27 03:27:48 UTC 2022
+%%% after eventselection with 16 run number 2 at Wed Apr 27 03:31:26 UTC 2022
+%%% before eventselection with 32 run number 2 at Wed Apr 27 03:31:26 UTC 2022
+%%% after eventselection with 32 run number 2 at Wed Apr 27 03:34:05 UTC 2022
+%%% before eventselection with 64 run number 2 at Wed Apr 27 03:34:05 UTC 2022
+%%% after eventselection with 64 run number 2 at Wed Apr 27 03:36:27 UTC 2022
+%%% before eventselection with 128 run number 2 at Wed Apr 27 03:36:27 UTC 2022
+%%% after eventselection with 128 run number 2 at Wed Apr 27 03:38:34 UTC 2022
+%%% before eventselection with 16 run number 3 at Wed Apr 27 03:38:34 UTC 2022
+%%% after eventselection with 16 run number 3 at Wed Apr 27 03:42:14 UTC 2022
+%%% before eventselection with 32 run number 3 at Wed Apr 27 03:42:14 UTC 2022
+%%% after eventselection with 32 run number 3 at Wed Apr 27 03:44:43 UTC 2022
+%%% before eventselection with 64 run number 3 at Wed Apr 27 03:44:43 UTC 2022
+%%% after eventselection with 64 run number 3 at Wed Apr 27 03:46:48 UTC 2022
+%%% before eventselection with 128 run number 3 at Wed Apr 27 03:46:48 UTC 2022
+%%% after eventselection with 128 run number 3 at Wed Apr 27 03:49:06 UTC 2022
+%%% before eventselection with 16 run number 4 at Wed Apr 27 03:49:06 UTC 2022
+%%% after eventselection with 16 run number 4 at Wed Apr 27 03:52:46 UTC 2022
+%%% before eventselection with 32 run number 4 at Wed Apr 27 03:52:46 UTC 2022
+%%% after eventselection with 32 run number 4 at Wed Apr 27 03:55:21 UTC 2022
+%%% before eventselection with 64 run number 4 at Wed Apr 27 03:55:21 UTC 2022
+%%% after eventselection with 64 run number 4 at Wed Apr 27 03:57:44 UTC 2022
+%%% before eventselection with 128 run number 4 at Wed Apr 27 03:57:44 UTC 2022
+%%% after eventselection with 128 run number 4 at Wed Apr 27 04:01:35 UTC 2022
+%%% before eventselection with 16 run number 5 at Wed Apr 27 04:01:35 UTC 2022
+%%% after eventselection with 16 run number 5 at Wed Apr 27 04:05:22 UTC 2022
+%%% before eventselection with 32 run number 5 at Wed Apr 27 04:05:22 UTC 2022
+%%% after eventselection with 32 run number 5 at Wed Apr 27 04:07:54 UTC 2022
+%%% before eventselection with 64 run number 5 at Wed Apr 27 04:07:54 UTC 2022
+%%% after eventselection with 64 run number 5 at Wed Apr 27 04:10:05 UTC 2022
+%%% before eventselection with 128 run number 5 at Wed Apr 27 04:10:05 UTC 2022
+%%% after eventselection with 128 run number 5 at Wed Apr 27 04:13:24 UTC 2022
+Exit status of aprun is: 
