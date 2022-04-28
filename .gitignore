@@ -1,3 +1,5 @@
 
 # Singularity images
 *.sif
+
+.ipynb_checkpoints
