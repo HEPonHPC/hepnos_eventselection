@@ -259,7 +259,7 @@
                         "config": {}
                     },
                     {
-                        "name": "hepnos-products-5",
+                        "name": "hepnos-products-1",
                         "type": "map",
                         "config": {}
                     }
@@ -280,7 +280,7 @@
                         "config": {}
                     },
                     {
-                        "name": "hepnos-products-6",
+                        "name": "hepnos-products-2",
                         "type": "map",
                         "config": {}
                     }
@@ -301,7 +301,7 @@
                         "config": {}
                     },
                     {
-                        "name": "hepnos-products-7",
+                        "name": "hepnos-products-3",
                         "type": "map",
                         "config": {}
                     }
@@ -381,135 +381,7 @@
             "config": {
                 "databases": [
                     {
-                        "name": "hepnos-events-4",
-                        "type": "set",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_8",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 8,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-events-5",
-                        "type": "set",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_9",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 9,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-events-6",
-                        "type": "set",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_10",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 10,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-events-7",
-                        "type": "set",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_11",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 11,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
                         "name": "hepnos-products-0",
-                        "type": "map",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_12",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 12,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-products-1",
-                        "type": "map",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_13",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 13,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-products-2",
-                        "type": "map",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_14",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 14,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-products-3",
-                        "type": "map",
-                        "config": {}
-                    }
-                ]
-            }
-        },
-        {
-            "name": "hepnos_15",
-            "type": "yokan",
-            "pool": "__primary__",
-            "provider_id": 15,
-            "dependencies": {},
-            "config": {
-                "databases": [
-                    {
-                        "name": "hepnos-products-4",
                         "type": "map",
                         "config": {}
                     }
