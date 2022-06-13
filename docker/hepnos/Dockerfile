@@ -48,7 +48,7 @@ COPY spack.yaml /hepnos
 
 RUN mv /hepnos/spack/etc/spack/defaults/config.yaml /hepnos/spack/etc/spack/config.yaml
 RUN cd /hepnos/spack/var/spack/repos/builtin/packages/spdlog && \
-    rm pacakge.py && \
+    rm package.py && \
     wget https://raw.githubusercontent.com/spack/spack/develop/var/spack/repos/builtin/packages/spdlog/package.py && \
     cd /
 RUN sed -i 's/rpath/runpath/g' /hepnos/spack/etc/spack/config.yaml
