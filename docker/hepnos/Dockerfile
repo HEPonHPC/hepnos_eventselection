@@ -16,6 +16,11 @@ RUN wget https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/Packages/p
     rpm -i patchelf-0.9-10.el6.x86_64.rpm && \
     rm patchelf-0.9-10.el6.x86_64.rpm
 
+RUN wget http://ftp.scientificlinux.org/linux/scientific/obsolete/6/x86_64/os/Packages/unzip-6.0-5.el6.x86_64.rpm && \
+    rpm -i unzip-6.0-5.el6.x86_64.rpm && \
+    rm unzip-6.0-5.el6.x86_64.rpm
+
+
 RUN rm -rf /mpich
 
 #RUN setup upd && \
