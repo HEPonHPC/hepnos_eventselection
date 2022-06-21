@@ -527,9 +527,16 @@ run_benchmark()
       timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_read_dataset});
     }
     catch (...) {
+      auto eptr = std::current_exception();
+      try {
+        std::rethrow_exception(eptr);
+      }
+      catch (const std::exception& e) {
+        spdlog::info("Loading dataset failed, with exception {}", e.what());
+      }
     }
-    if (!dataset.valid() && g_rank == 0) {
-      spdlog::critical("Invalid dataset {}", g_input_dataset);
+    if (!dataset.valid()) {
+      spdlog::info("Invalid dataset {}", g_input_dataset);
       MPI_Abort(MPI_COMM_WORLD, -1);
       exit(-1);
     }
