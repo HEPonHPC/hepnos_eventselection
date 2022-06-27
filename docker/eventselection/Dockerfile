@@ -3,7 +3,7 @@ MAINTAINER ssehrish@fnal.gov
 
 WORKDIR /code
 
-LABEL version="1.75"
+LABEL version="1.76"
 
 RUN spack env activate hepnos-env && \
     export PATH=$PATH:/mpich/bin && \

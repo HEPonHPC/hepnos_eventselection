@@ -516,13 +516,15 @@ run_benchmark()
         // make another global hash map, value is the counter
       }
     }
-    spdlog::info("Loading dataset");
+    spdlog::info("Preparing to load dataset");
     hepnos::DataSet dataset;
     try {
 
       // time stamp before read dataset
       timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_read_dataset});
+      spdlog::info("before loading dataset");
       dataset = datastore.root()[g_input_dataset];
+      spdlog::info("after loading dataset");
       // time stamp after read dataset
       timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_read_dataset});
     }
@@ -542,6 +544,7 @@ run_benchmark()
     }
     // time stamp before barrier after dataset
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_post_read_barrier});
+    spdlog::info("Reached MPI_Barrier after loading dataset");
     MPI_Barrier(MPI_COMM_WORLD);
     // time stamp after barrier after dataset
     timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_post_read_barrier});
