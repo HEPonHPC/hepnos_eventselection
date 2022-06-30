@@ -81,6 +81,7 @@ main(int argc, char** argv)
   parse_arguments(argc, argv);
 
   spdlog::set_level(g_logging_level);
+  spdlog::flush_on(spdlog::level::info);
 
   if (provided != required && g_rank == 0) {
     spdlog::warn("MPI doesn't provider MPI_THREAD_MULTIPLE");
