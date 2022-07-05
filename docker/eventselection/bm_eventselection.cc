@@ -519,25 +519,21 @@ run_benchmark()
     }
     spdlog::info("Preparing to load dataset");
     hepnos::DataSet dataset;
-    try {
 
-      // time stamp before read dataset
-      timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::pre_read_dataset});
-      spdlog::info("before loading dataset");
-      dataset = datastore.root()[g_input_dataset];
-      spdlog::info("after loading dataset");
-      // time stamp after read dataset
-      timingdata.push_back({MPI_Wtime()-ref_time, 0, Steps::post_read_dataset});
+    /* load dataset on rank0 only, bcast uuid */
+    hepnos::UUID dset_uuid;
+    if (g_rank==0) {
+        spdlog::info("obtaining UUID of dataset");
+	dataset = datastore.root()[g_input_dataset];
+	dset_uuid = dataset.uuid();
     }
-    catch (...) {
-      auto eptr = std::current_exception();
-      try {
-        std::rethrow_exception(eptr);
-      }
-      catch (const std::exception& e) {
-        spdlog::info("Loading dataset failed, with exception {}", e.what());
-      }
+    if (MPI_Bcast(&dset_uuid, sizeof(dset_uuid), MPI_BYTE, 0, MPI_COMM_WORLD) != MPI_SUCCESS ){
+      spdlog::critical("MPI_Bcase of uuid has failed!");
     }
+    spdlog::info("Before loading dataset");
+    dataset = hepnos::DataSet::fromUUID(datastore, g_input_dataset, "", dset_uuid);
+    spdlog::info("After loading dataset");
+
     if (!dataset.valid()) {
       spdlog::info("Invalid dataset {}", g_input_dataset);
       MPI_Abort(MPI_COMM_WORLD, -1);
