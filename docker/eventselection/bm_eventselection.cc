@@ -523,16 +523,21 @@ run_benchmark()
     /* load dataset on rank0 only, bcast uuid */
     hepnos::UUID dset_uuid;
     if (g_rank==0) {
-        spdlog::info("obtaining UUID of dataset");
+	spdlog::info("obtaining UUID of dataset");
 	dataset = datastore.root()[g_input_dataset];
 	dset_uuid = dataset.uuid();
+	spdlog::info("UUID of dataset is : {}", dset_uuid);
     }
     if (MPI_Bcast(&dset_uuid, sizeof(dset_uuid), MPI_BYTE, 0, MPI_COMM_WORLD) != MPI_SUCCESS ){
-      spdlog::critical("MPI_Bcase of uuid has failed!");
+      spdlog::critical("MPI_Bcast of uuid has failed!");
     }
-    spdlog::info("Before loading dataset");
-    dataset = hepnos::DataSet::fromUUID(datastore, g_input_dataset, "", dset_uuid);
-    spdlog::info("After loading dataset");
+    spdlog::info("MPI_Bcast of UUID was successful, UUID of dataset is : {}", dset_uuid);
+
+    if (g_rank!=0) {
+      spdlog::info("Before loading dataset");
+      dataset = hepnos::DataSet::fromUUID(datastore, g_input_dataset, "", dset_uuid);
+      spdlog::info("After loading dataset");
+    }
 
     if (!dataset.valid()) {
       spdlog::info("Invalid dataset {}", g_input_dataset);
