@@ -1,0 +1,435 @@
+$pid = getpid();
+mkdir("/local");
+mkdir("/local/scratch");
+mkdir("/local/scratch/hepnos");
+mkdir("/local/scratch/hepnos/$pid");
+$config = {
+    "margo": {
+        "progress_timeout_ub_msec": 100,
+        "enable_profiling": false,
+        "enable_diagnostics": false,
+        "handle_cache_size": 32,
+        "profile_sparkline_timeslice_msec": 1000,
+        "argobots": {
+            "abt_mem_max_num_stacks": 8,
+            "abt_thread_stacksize": 2097152,
+            "version": "unknown",
+            "pools": [
+                {
+                    "name": "__primary__",
+                    "kind": "fifo_wait",
+                    "access": "mpmc"
+                }
+            ],
+            "xstreams": [
+                {
+                    "name": "__primary__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_0__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_1__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_2__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_3__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_4__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_5__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_6__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_7__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_8__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_9__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_10__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_11__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_12__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_13__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_14__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                },
+                {
+                    "name": "__rpc_15__",
+                    "cpubind": -1,
+                    "affinity": [],
+                    "scheduler": {
+                        "type": "basic_wait",
+                        "pools": [
+                            "__primary__"
+                        ]
+                    }
+                }
+            ]
+        },
+        "mercury": {
+            "address": "ofi+gni",
+            "listening": true,
+            "ip_subnet": "",
+            "auth_key": "",
+            "auto_sm": false,
+            "max_contexts": 1,
+            "na_no_block": false,
+            "na_no_retry": false,
+            "no_bulk_eager": false,
+            "no_loopback": false,
+            "request_post_incr": 256,
+            "request_post_init": 256,
+            "stats": false,
+            "version": "unknown"
+        },
+        "progress_pool": "__primary__",
+        "rpc_pool": "__primary__"
+    },
+    "abt_io": [],
+    "ssg": [
+        {
+            "name": "hepnos",
+            "pool": "__primary__",
+            "credential": -1,
+            "bootstrap": "mpi",
+            "group_file": "hepnos.ssg",
+            "swim": {
+                "period_length_ms": 0,
+                "suspect_timeout_periods": -1,
+                "subgroup_member_count": -1,
+                "disabled": true
+            }
+        }
+    ],
+    "libraries": {
+        "yokan": "libyokan-bedrock-module.so"
+    },
+    "providers": [
+        {
+            "name": "hepnos_0",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 0,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-datasets-0",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-datasets-0"
+                        }
+                    },
+                    {
+                        "name": "hepnos-products-1",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-products-1"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_1",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 1,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-runs-0",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-runs-0"
+                        }
+                    },
+                    {
+                        "name": "hepnos-products-2",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-products-2"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_2",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 2,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-subruns-0",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-subruns-0"
+                        }
+                    },
+                    {
+                        "name": "hepnos-products-3",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-products-3"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_3",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 3,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-events-0",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-events-0"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_4",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 4,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-events-1",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-events-1"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_5",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 5,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-events-2",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-events-2"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_6",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 6,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-events-3",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-events-3"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hepnos_7",
+            "type": "yokan",
+            "pool": "__primary__",
+            "provider_id": 7,
+            "dependencies": {},
+            "config": {
+                "databases": [
+                    {
+                        "name": "hepnos-products-0",
+                        "type": "rocksdb",
+                        "config": {
+                            "create_if_missing": true,
+                            "path": "/local/scratch/hepnos/$pid/hepnos-products-0"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "bedrock": {
+        "pool": "__primary__",
+        "provider_id": 0
+    }
+};
+return $config;
