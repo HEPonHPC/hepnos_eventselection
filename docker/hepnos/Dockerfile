@@ -31,10 +31,10 @@ RUN mkdir -p /hepnos/spack
 ENV SPACK_ROOT=/hepnos/spack \
     FORCE_UNSAFE_CONFIGURE=1
 
-LABEL version="0.6.11"
+LABEL version="0.7.0"
 # Clone spack and setup its environment
 # spack@develop no longer supports python 2.6! Use the last release instead.
-RUN curl -s -L https://github.com/spack/spack/releases/download/v0.17.2/spack-0.17.2.tar.gz | \
+RUN curl -s -L https://github.com/spack/spack/releases/download/v0.17.3/spack-0.17.3.tar.gz | \
         tar xzC ${SPACK_ROOT} --strip 1 && \
     echo "source $SPACK_ROOT/share/spack/setup-env.sh" >> /etc/profile.d/spack.sh
 
@@ -63,4 +63,4 @@ RUN spack env create hepnos-env /hepnos/spack.yaml
 RUN spack env activate hepnos-env && spack -dd concretize -f
 
 # Install the environment, cleanup after
-RUN spack env activate hepnos-env && spack install --fail-fast && spack gc -y
+RUN spack env activate hepnos-env && spack install --fail-fast --yes-to-all && spack gc -y
