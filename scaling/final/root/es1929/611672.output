@@ -1,0 +1,56 @@
+COBALT_JOBID =  611672
+COBALT_JOBSIZE (nodes) = 256
+COBALT_PARTNAME =  40-41,43,120-129,353-357,468-469,570-579,730-739,998-999,1208-1209,1273-1275,1350-1359,1420-1429,1510,1512-1519,1568-1569,1640-1649,1735,1742-1743,1748-1749,2068-2069,2156,2158-2159,2403,2660-2668,2790-2802,2804,2806-2809,2930-2939,3077,3109,3168-3169,3180-3189,3222,3255,3304-3305,3309,3360,3362-3363,3366-3367,3370-3374,3376,3378-3379,3394-3397,3410-3411,3414,3416-3417,3432,3500-3509,3570-3576,3578-3579,3595,3612-3614,3619,3760-3764,3766-3769,3783,3793,3797,3799,3961,3980-3981,3984-3987,4010-4011,4013,4015-4019,4027,4054,4057-4058,4224-4225,4227-4228,4240-4244,4246-4247,4261,4271,4273-4275,4328,4363-4365,4376,4393
+%%% start Thu Jul 28 06:02:52 UTC 2022
+%%% after_module_loads Thu Jul 28 06:02:53 UTC 2022
+%%% before eventselection with 16 run number 1 at Thu Jul 28 06:02:53 UTC 2022
+%%% after eventselection with 16 run number 1 at Thu Jul 28 06:06:25 UTC 2022
+%%% before eventselection with 32 run number 1 at Thu Jul 28 06:06:25 UTC 2022
+%%% after eventselection with 32 run number 1 at Thu Jul 28 06:08:37 UTC 2022
+%%% before eventselection with 64 run number 1 at Thu Jul 28 06:08:37 UTC 2022
+%%% after eventselection with 64 run number 1 at Thu Jul 28 06:10:06 UTC 2022
+%%% before eventselection with 128 run number 1 at Thu Jul 28 06:10:06 UTC 2022
+%%% after eventselection with 128 run number 1 at Thu Jul 28 06:11:24 UTC 2022
+%%% before eventselection with 256 run number 1 at Thu Jul 28 06:11:24 UTC 2022
+%%% after eventselection with 256 run number 1 at Thu Jul 28 06:11:41 UTC 2022
+%%% before eventselection with 16 run number 2 at Thu Jul 28 06:11:41 UTC 2022
+%%% after eventselection with 16 run number 2 at Thu Jul 28 06:15:19 UTC 2022
+%%% before eventselection with 32 run number 2 at Thu Jul 28 06:15:19 UTC 2022
+%%% after eventselection with 32 run number 2 at Thu Jul 28 06:17:30 UTC 2022
+%%% before eventselection with 64 run number 2 at Thu Jul 28 06:17:30 UTC 2022
+%%% after eventselection with 64 run number 2 at Thu Jul 28 06:19:01 UTC 2022
+%%% before eventselection with 128 run number 2 at Thu Jul 28 06:19:01 UTC 2022
+%%% after eventselection with 128 run number 2 at Thu Jul 28 06:20:19 UTC 2022
+%%% before eventselection with 256 run number 2 at Thu Jul 28 06:20:19 UTC 2022
+%%% after eventselection with 256 run number 2 at Thu Jul 28 06:20:35 UTC 2022
+%%% before eventselection with 16 run number 3 at Thu Jul 28 06:20:35 UTC 2022
+%%% after eventselection with 16 run number 3 at Thu Jul 28 06:24:12 UTC 2022
+%%% before eventselection with 32 run number 3 at Thu Jul 28 06:24:12 UTC 2022
+%%% after eventselection with 32 run number 3 at Thu Jul 28 06:26:23 UTC 2022
+%%% before eventselection with 64 run number 3 at Thu Jul 28 06:26:23 UTC 2022
+%%% after eventselection with 64 run number 3 at Thu Jul 28 06:27:55 UTC 2022
+%%% before eventselection with 128 run number 3 at Thu Jul 28 06:27:55 UTC 2022
+%%% after eventselection with 128 run number 3 at Thu Jul 28 06:29:12 UTC 2022
+%%% before eventselection with 256 run number 3 at Thu Jul 28 06:29:12 UTC 2022
+%%% after eventselection with 256 run number 3 at Thu Jul 28 06:29:29 UTC 2022
+%%% before eventselection with 16 run number 4 at Thu Jul 28 06:29:29 UTC 2022
+%%% after eventselection with 16 run number 4 at Thu Jul 28 06:33:04 UTC 2022
+%%% before eventselection with 32 run number 4 at Thu Jul 28 06:33:04 UTC 2022
+%%% after eventselection with 32 run number 4 at Thu Jul 28 06:35:16 UTC 2022
+%%% before eventselection with 64 run number 4 at Thu Jul 28 06:35:16 UTC 2022
+%%% after eventselection with 64 run number 4 at Thu Jul 28 06:36:47 UTC 2022
+%%% before eventselection with 128 run number 4 at Thu Jul 28 06:36:47 UTC 2022
+%%% after eventselection with 128 run number 4 at Thu Jul 28 06:38:06 UTC 2022
+%%% before eventselection with 256 run number 4 at Thu Jul 28 06:38:06 UTC 2022
+%%% after eventselection with 256 run number 4 at Thu Jul 28 06:38:23 UTC 2022
+%%% before eventselection with 16 run number 5 at Thu Jul 28 06:38:23 UTC 2022
+%%% after eventselection with 16 run number 5 at Thu Jul 28 06:41:59 UTC 2022
+%%% before eventselection with 32 run number 5 at Thu Jul 28 06:41:59 UTC 2022
+%%% after eventselection with 32 run number 5 at Thu Jul 28 06:44:09 UTC 2022
+%%% before eventselection with 64 run number 5 at Thu Jul 28 06:44:09 UTC 2022
+%%% after eventselection with 64 run number 5 at Thu Jul 28 06:45:39 UTC 2022
+%%% before eventselection with 128 run number 5 at Thu Jul 28 06:45:39 UTC 2022
+%%% after eventselection with 128 run number 5 at Thu Jul 28 06:46:58 UTC 2022
+%%% before eventselection with 256 run number 5 at Thu Jul 28 06:46:58 UTC 2022
+%%% after eventselection with 256 run number 5 at Thu Jul 28 06:47:14 UTC 2022
+Exit status of aprun is: 
