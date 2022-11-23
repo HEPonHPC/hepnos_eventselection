@@ -1,4 +1,4 @@
-,files,total-num-nodes,run-number,analysis_end_times,analysis-method
+,files,total_num_nodes,expt_number,analysis_end_times,analysis_method
 0,1929.0,8.0,1.0,390.0,ROOT
 1,1929.0,16.0,1.0,212.0,ROOT
 2,1929.0,16.0,2.0,218.0,ROOT
