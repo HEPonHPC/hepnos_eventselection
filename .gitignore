@@ -2,4 +2,8 @@
 # Singularity images
 *.sif
 
+# SVG/PNG images
+*.svg
+*.png
+
 .ipynb_checkpoints
